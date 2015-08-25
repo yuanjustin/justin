@@ -131,7 +131,7 @@
 
 
         <div id='numberInputMenu' style="left: 50%;top: 50%;position: absolute;" >
-            <input  id='numberInputer' type="text" style="opacity:0.8;float:top;background-color: white" class="text-input bg-Grey-100" onkeypress="numInputerChange();this.size=(this.value.length>4?this.value.length:4);" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');$(this).addClass('bg-Grey-100')" size="4">
+            <input  id='numberInputer' type="text" style="opacity:0.8;float:top;background-color: white" class="text-input bg-Grey-100" oninput="numInputerChange();this.size=(this.value.length>4?this.value.length:4);" onpropertychange=""numInputerChange();this.size=(this.value.length>4?this.value.length:4);"" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');$(this).addClass('bg-Grey-100')" size="4">
             <div style="float:top;">
                 <ul style="width: 10%" page=0 class="menu" id="mainNum">
                 </ul>

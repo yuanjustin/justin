@@ -74,7 +74,7 @@ function onload() {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
-            if(getState()=='type'){
+            if(getState()=='type'||getState()=='numberInput'){
                 if(TypeKeyPress(event.which)){
                     return false;
                 };
@@ -939,8 +939,12 @@ function numInputerChange() {
             $('#mainNum').html('');
             $('#otherNum').html('');
             for (var i = 0; i <= 4; i++) {
-                $('#mainNum').append('<li ' + 'class=' + baiduAjax[i].class + '>' + unit[i][0] + '</li>');
-                $('#otherNum').append('<li ' + 'class=' + termAjax[i].class + '>' + unit[0][i] + '</li>');
+                if(i<=unit.length){
+                    $('#mainNum').append('<li ' + 'class=' + unit[i][0].class + '>' + unit[i][0].value + '</li>');
+                }
+                if(i<=unit[0].length){
+                    $('#otherNum').append('<li ' + 'class=' + unit[0][i].class + '>' + unit[0][i].value + '</li>');
+                }
             }
         }
     );

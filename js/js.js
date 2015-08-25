@@ -1,0 +1,925 @@
+//??!!!!!!!!!!!!!!!!!!!!!!!!!ajax一定要延时
+//
+//var changeTab = function(){
+//    var timeId = 0;
+//    return function(tabId){
+//        if(timeId){
+//            clearTimeout(timeId);
+//            timeId=0;
+//        }
+//        setTimeout(function(){
+//            //ajax do something
+//        },500);
+//    };
+//}();
+
+
+//***************
+//****启动和事件绑定***
+//***************
+
+//document.onmousemove = mouseMove;
+//document.onselectionchange= (selectChange());
+function onload() {
+    var md = new Material();
+    document.getElementById("leftMenu").addEventListener("transitionend", function (){ autoBreakLine();});
+    document.getElementById("leftMenu").addEventListener("webkitTransitionEnd", function (){ autoBreakLine();});
+    window.mySpan={};
+    Dialog.show(document.querySelector('#login'))
+    window.termAjax=new Array();
+    window.baiduAjax=new Array();
+    SideMenu.hide(document.querySelector('#leftMenu'));
+    //加入左菜单鼠标事件
+    $('#leftMenu').hover(function () {
+        SideMenu.show(document.querySelector('#leftMenu'));
+        //console.log('inter');
+        //clearTimeout(0);
+        //setTimeout(function () {
+        //    autoBreakLine();
+        //}, 200);
+    }, function () {
+        menuhide();
+    });
+    $('.my-menu-section').mouseenter(function () {
+        munuchange(this.id);
+    });
+    //$('#inputmenu').attr('pinyin',$('#numberInputMenu'));
+    //alert($('#inputmenu').attr('pinyin'));
+
+    //加入删除事件
+    /* $(document).unbind('keydown').bind('keydown', function (event) {
+     event.preventDefault();
+     });*/
+    $('#dk').children('.card').click(clickSpan());
+
+    $('#dk').keypress(function (event) {
+        if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
+            event.which = event.charCode || event.keyCode;
+        }
+        if (getState() == 'type') {
+            if (TypeKeyPress(event.which)) {//判断按键并且返回是否屏蔽
+                event.preventDefault();//屏蔽按键
+            }
+        } else {
+            if (noTypeKeyPress(event.which)) {//判断按键并且返回是否屏蔽
+                event.preventDefault();//屏蔽按键
+            }
+        }
+
+    });
+
+    $('#dk').keydown(function (event) {
+        if (event.which == 37 || event.which == 38 || event.which == 39
+            || event.which == 40 || event.which == 8
+            || event.which == 33 || event.which == 34) {
+            if(getState()=='type'){
+                if(TypeKeyPress(event.which)){
+                    return false;
+                };
+            }else{
+                if(noTypeKeyPress(event.which)){
+                    return false;
+                };
+            }
+            //event.keyCode = 0 ;
+            // event.returnValue=false;
+
+        }
+    });
+    window.onresize = autoBreakLine;
+}
+//********************************************************************************
+
+//***************
+//****各个事件***
+//***************
+function getTerm(){
+
+    //储存到全局变量
+
+}
+//*****************************************键盘时间********************************
+function noTypeKeyPress(event) {
+    //alert(event);
+    if((event>=65&&event<=90)||(event>=97&&event<=122)){
+        if(getState()!='type'){
+            mySpan=getCaretPos();
+            $('#inputmenu')[0].hidden=false;
+            $('#unitSelectMenu')[0].hidden=true;
+            $('#charSelectMenu')[0].hidden=true;
+            $('#numberInputMenu')[0].hidden=true;
+            $('#tipsMenu')[0].hidden=true;
+            $('#positonMenu')[0].hidden=true;
+            $('#numSelectMenu')[0].hidden=true;
+
+            $('#inputmenu').offset({top:mySpan.offset().top,left:mySpan.offset().left+mySpan.outerWidth(true)});
+            $('#inputer').focus();
+            setCaretPos0($('#inputer'));
+            //ajaxTerm();
+        }
+        return false;//不要屏蔽按键
+    }else{
+        switch (event) {
+            case 8:
+                //alert($('#a1').children(":last").attr('id'));
+                //$('.firstline').append($('.secondline').children());
+                removeSpan(getCaretPos());
+                break;
+            case 190:
+                //alert($('#a1').children(":last").attr('id'));
+                //$('.firstline').append($('.secondline').children());
+                newline(getCaretPos());
+                break;
+            case 188:
+                //alert($('#a1').children(":last").attr('id'));
+                //$('.firstline').append($('.secondline').children());
+                newline(getCaretPos());
+                break;
+            case 40://向下
+                movespan('down');
+                break;
+            case 38://向上
+                movespan('up');
+                break;
+            case 37://向左
+                movespan('backward');
+                break;
+            case 39://向右
+                movespan('forward');
+                break;
+            case 49://test
+                //alert('1');
+                //event.keyCode = 0;
+                //event.returnValue =  false;
+                addspan(getCaretPos(), 'symptom', 'symptom', 'pinyin');
+                break;
+            case 44://，
+                addspan(getCaretPos(), '，', 'endspan', '!');
+                break;
+            case 46://。
+                addspan(getCaretPos(), '。', 'endspan', '!');
+                break;
+            case 50://test
+                //alert($('#a1').children(":last").attr('id'));
+                //$('.firstline').append($('.secondline').children());
+                addspan(getCaretPos(), 'position', 'position', 'ooo');
+                break;
+            case 51://test
+                //alert($('#a1').children(":last").attr('id'));
+                //$('.firstline').append($('.secondline').children());
+
+                $("#a1_2")[0].focus();
+                break;
+        }
+        return true;//屏蔽按键
+    }
+}
+function TypeKeyPress(event) {
+    //alert(event);
+    if((event>=65&&event<=90)||(event>=97&&event<=122)){
+        return false;//不要屏蔽按键
+        //ajaxTerm();
+    }else{
+        switch (event) {
+            case 8:
+                return false;//不要屏蔽退格键
+            case 40://向下
+                //判断是不是最后一个
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
+                if(selectmenu[0].tagName=='INPUT'){
+                    selectmenu.removeClass('bg-Grey-100');
+                    $('#term').children(':first').addClass('bg-Grey-100');
+                    return false;
+                }else{
+                    if(isLastChild(selectmenu)==false){
+                        selectmenu.removeClass('bg-Grey-100');
+                        selectmenu.next().addClass('bg-Grey-100');
+                    }
+                    return true;
+                }
+
+            case 38://向上
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
+                if(selectmenu[0].tagName!='INPUT'){
+                    if(isFirstChild(selectmenu)==false){
+                        selectmenu.removeClass('bg-Grey-100');
+                        selectmenu.prev().addClass('bg-Grey-100');
+                    }else{
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#inputer').addClass('bg-Grey-100');
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+            case 37://向左
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
+                if(selectmenu[0].tagName!='INPUT'){
+                    if(selectmenu.parent()[0].id=='term'){
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#baidu').children(':first').addClass('bg-Grey-100');
+                    }else{
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#term').children(':first').addClass('bg-Grey-100');
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+            case 39://向右
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
+                if(selectmenu[0].tagName!='INPUT'){
+                    if(selectmenu.parent()[0].id=='term'){
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#baidu').children(':first').addClass('bg-Grey-100');
+                    }else{
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#term').children(':first').addClass('bg-Grey-100');
+                    }
+                    return true;
+                }else{
+                    return false;
+                }
+            case 33:
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
+                var page=selectmenu.attr('page');
+                if(page>0){
+                    page--;
+                    selectmenu.attr('page',page);
+                    var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax
+                    for(var i=0;i<=4;i++){
+                        selectmenu .children().eq(i).text(term[page*5+i].value);
+                    }
+                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                    selectmenu.children(':first').addClass('bg-Grey-100');
+                }
+                return true;
+            case 34:
+                var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
+                var page=selectmenu.attr('page');
+                var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax;
+                if(page*5<term.length){
+                    page++;
+                    selectmenu.attr('page',page);
+                    if(page*5<=term.length){
+                        for(var i=0;i<=4;i++){
+                            selectmenu .children().eq(i).text(term[page*5+i].value);
+                        }
+                    }else{
+                        for(var i=0;i<=term.length-page*5-1;i++){
+                            selectmenu .children().eq(i).text(term[page*5+i].value);
+                        }
+                    }
+                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                    selectmenu.children(':first').addClass('bg-Grey-100');
+                }
+                return true;
+                //nextpage
+                //判断还有没有下一页
+                //有的话显示并且选择第一项目
+
+        }
+        return true;//屏蔽按键
+    }
+}
+
+
+
+//**********************************************************************
+
+
+//*************************鼠标事件***********************************
+//function mouseMove(ev) {
+//    Ev = ev || window.event;
+//    var mousePos = mouseCoords(ev);
+//    if (mousePos.x < 5) {
+//        SideMenu.show(document.querySelector('#leftMenu'));
+//    }
+//    ;
+//}
+//
+//
+//function mouseCoords(ev) {
+//    if (ev.pageX || ev.pageY) {
+//        return {x: ev.pageX, y: ev.pageY};
+//    }
+//    return {
+//        x: ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+//        y: ev.clientY + document.body.scrollTop - document.body.clientTop
+//    };
+//}
+function clickSpan() {
+    $('#inputer').val('');
+    $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
+    $('#inputer').addClass('bg-Grey-100');
+    $('#inputmenu')[0].hidden=true;
+    $('#unitSelectMenu')[0].hidden=true;
+    $('#charSelectMenu')[0].hidden=true;
+    $('#numberInputMenu')[0].hidden=true;
+    $('#tipsMenu')[0].hidden=true;
+    $('#positonMenu')[0].hidden=true;
+    $('#numSelectMenu')[0].hidden=true;
+    obj = getCaretPos();
+    if (obj[0].tagName == "SPAN") {
+        if(obj.hasClass('number')){
+            $('#numberInputMenu')[0].hidden=false;
+        }else if(obj.hasClass('unit')){
+            $('#unitSelectMenu')[0].hidden=false;
+        }else if(obj.hasClass('position')){
+            $('#inputmenu')[0].hidden=false;
+        }else if(obj.hasClass('endspan')||obj.hasClass('newspan')){
+        } else{
+            $('#charSelectMenu')[0].hidden=false;
+        }
+        selectChange();
+    }
+
+}
+//**标记改变
+function selectChange() {
+    //改变选择高亮
+    obj = getCaretPos();
+    if (obj[0].tagName == "SPAN") {
+        if (obj.hasClass('endspan')) {
+            $('.selectSpan').removeClass('selectSpan')
+            var code = obj.parent();
+            while (code.hasClass('secondline')) {
+                code.addClass('selectSpan');
+                code = code.prev();
+            }
+            ;
+            code.addClass('selectSpan');
+            code = code.prev();
+            //}else if(obj.hasClass('newspan')){
+        } else {
+            $('.selectSpan').removeClass('selectSpan')
+            obj.addClass('selectSpan');
+        }
+    }
+}
+
+
+//**菜单
+function menuhide() {
+    if (document.getElementById("switch").checked == false) {
+        SideMenu.hide(document.querySelector('#leftMenu'));
+        //console.log('leave');
+        //clearTimeout(0);
+        //setTimeout(function () {
+        //    autoBreakLine();
+        //}, 200);
+        // clearTimeout(0);
+        //setTimeout(function(){
+        //    autoBreakLine(); },50);
+    }
+}
+
+function munuchange(id) {
+    for (var i = 1; i <= 5; i++) {
+        var id1 = "m" + i;
+        //alert("#"+id1);
+        $("#" + id1).removeClass("bg-Grey-100");
+        $("#" + id1).addClass("bg-Grey-100");
+    }
+    $("#" + id).removeClass("bg-Grey-100");
+    switch (id) {
+        case "m1":
+            $('#my-menu-right').html('<ul class="menu"> <li ripple><a href="#">Open file</a></li> <li class="divider"></li> <li ripple><a href="#">Reload file</a></li></ul>');
+            break;
+        case "m2":
+            $('#my-menu-right').html("1112");
+            break;
+        case "m3":
+            $('#my-menu-right').html("1113");
+            break;
+        case "m4":
+            $('#my-menu-right').html("1114");
+            break;
+        case "m5":
+            $('#my-menu-right').html("1115");
+            break;
+
+    }
+}
+//function myselect(id){
+//    $('.myselect').removeClass('myselect');
+//    $('#'+id).addClass("myselect");
+//}
+//*******************************************************************************
+
+
+//**********************************重新布局排版*****************************
+//function needNewLine(current,code) {
+//    var old=code.outerWidth();
+//    code.children(':last').remove();
+//    var neww=code.outerWidth();
+//    if(neww==old){
+//        return true;
+//    }else{
+//        code.append(current);
+//        return false;
+//    }
+//}
+function autoBreakLine() {
+    //alert(getCaretPos().parent().parent().find("span").length);
+    var nowspan = getCaretPos();
+    var cards = $('#dk').children('.card');
+    for (var j = 0; j <= cards.length - 1; j++) {
+        var card = cards.eq(j);
+        //alert(card[0].id);
+        //var card=$('#gr');
+        var allSpan = card.find('span');
+        //alert(allSpan.length);
+        card.html('');
+        card.append("<code class='firstline'> </code>");
+        var code = card.children(':first');
+        //alert(code[0].className);
+        for (var i = 0; i <= allSpan.length - 1; i++) {
+            var current = allSpan.eq(i);
+            //if(current.hasClass('newspan')){
+            //    code.append(current);
+            //}else{
+            /*if(current.hasClass('endspan')){
+             code.append(current);
+             card.append("<code class='firstline'></code>");
+             code=card.children(':last');
+             }
+             else{*/
+            var old = code.outerWidth(true);
+            var oldpos = code.offset().left
+            code.append(current);
+            var neww = code.outerWidth(true) - current.outerWidth(true);
+            var newpos = code.offset().left
+            if ((old != neww) || (oldpos != newpos) && (code.children().length != 1)) {
+                card.append("<code class='secondline'></code>");
+                code = card.children(':last');
+                code.append(current);
+            }
+            if (current.hasClass('endspan')) {
+                card.append("<code class='firstline'></code>");
+                code = card.children(':last');
+            }
+            //}
+            //}
+
+
+        }
+    }
+    if (nowspan[0].tagName == "SPAN") {
+        setCaretPos(nowspan);
+    }
+}
+
+function isLeft(obj) {
+    /* var bordT = that.outerWidth() - that.innerWidth();
+     var paddT = that.innerWidth() - that.width();
+     var margT = that.outerWidth(true) - that.outerWidth();*/
+    // alert(obj.offset().left-obj.parent().parent().offset().left);
+    //alert(obj.offsetLeft);
+    //alert(obj[0].id)
+    if (obj.offset().left - obj.parent().parent().offset().left == 5) {//5是code的padding+border
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//**********************
+//*******选择元素********
+//*********************
+
+function isFirstChild(obj2) {
+    var obj1=obj2.parent();
+    //console.log(obj1.children(":last")[0].id);
+    var result=obj1.children(":first")[0]==obj2[0]
+    return result;
+}
+
+//**设置获取指针
+function setCaretPos0(obj) {
+var s = window.getSelection();
+var r = s.getRangeAt(0);
+//if( dir=='forward'){
+//    r.setStartAfter(obj[0], 0);
+//    r.setEndBefore(obj[0], 0);
+//}else{
+r.setStart(obj[0], 0);
+r.setEnd(obj[0], 1);
+//}
+s.removeAllRanges();
+s.addRange(r);
+selectChange();
+}
+function setCaretPos(obj) {
+    var s = window.getSelection();
+    var r = s.getRangeAt(0);
+//if( dir=='forward'){
+//    r.setStartAfter(obj[0], 0);
+//    r.setEndBefore(obj[0], 0);
+//}else{
+    r.setStart(obj[0].childNodes[0], 1);
+    r.setEnd(obj[0].childNodes[0], 1);
+//}
+    s.removeAllRanges();
+    s.addRange(r);
+    selectChange();
+}
+function getCaretPos() {
+    try {
+        range = window.getSelection().getRangeAt(0);
+        /*start = range.startOffset;
+         end = range.endOffset;*/
+        var result = range.startContainer.parentNode;
+        return $(result);
+    }
+    catch (error) {
+        return false;
+    }
+}
+//alert(result.parents('.card').children("code:odd").first().attr('id'));
+//autoBreakLine(result);
+//window.getSelection().modify('move','forward','character');
+//var a=window.getSelection().getRangeAt(0);
+//alert(a.getRangeAt(0).startContainer.parentNode.atter('id'));
+//aaa(result) ;
+/*startNode = range.startContainer;
+ endNode = range.endContainer;
+ selectedText = range.toString();
+ alert('start: '+start+'\
+ \
+ end: '+ end+'\
+ \
+ text: '+selectedText +'\
+ \
+ startnode: '+$(startNode.parentNode).index()+'\
+ \
+ endnode: '+$(endNode.parentNode).index() );*/
+//alert(result.parents('.card').children("code:odd").first().attr('id'));
+//autoBreakLine(result);
+//window.getSelection().modify('move','forward','character');
+//var a=window.getSelection().getRangeAt(0);
+//alert(a.getRangeAt(0).startContainer.parentNode.atter('id'));
+//aaa(result) ;
+/*startNode = range.startContainer;
+ endNode = range.endContainer;
+ selectedText = range.toString();
+ alert('start: '+start+'\
+ \
+ end: '+ end+'\
+ \
+ text: '+selectedText +'\
+ \
+ startnode: '+$(startNode.parentNode).index()+'\
+ \
+ endnode: '+$(endNode.parentNode).index() );*/
+
+//**
+function movespan(dir) {
+    //获取自己同胞位置 光标跳转过去根据dir 判断是不是code最后 是的话我们就跳转到下一个code第一个span 判断是不是c
+    // 卡片最后 是的话我们就跳转到下一个卡片第一个span
+    var obj = getCaretPos();
+    var index;
+    //var s=window.getSelection();
+    //var r=s.getRangeAt(0);
+    //console.log('now'+getCaretPos()[0].id);
+    var allSpan = $('#dk').find('span');
+    for (var i = 0; i <= allSpan.length - 1; i++) {
+        if (obj[0] == allSpan.eq(i)[0]) {
+            index = i;
+            break;
+        }
+        ;
+
+    }
+    switch (dir) {
+        case 'forward':
+            if (index == allSpan.length - 1) {
+                setCaretPos(allSpan.eq(0));
+            } else {
+                setCaretPos(allSpan.eq(index + 1));
+            }
+            break;
+        case 'backward':
+            if (index == 0) {
+                setCaretPos(allSpan.eq(allSpan.length));
+            } else {
+                setCaretPos(allSpan.eq(index - 1));
+            }
+            break;
+        case 'up':
+            var old = allSpan.eq(index).offset().left + allSpan.eq(index).outerWidth(true);
+            while (isLeft(allSpan.eq(index)) == false) {
+                index--;
+            }
+            index--;
+            while (isLeft(allSpan.eq(index)) == false) {
+                if (allSpan.eq(index).offset().left < old) {
+                    break;
+                }
+                index--;
+            }
+            setCaretPos(allSpan.eq(index));
+            break;
+        case 'down':
+            if (isLeft(allSpan.eq(index)) == false) {
+                var old = allSpan.eq(index).offset().left;
+                while (isLeft(allSpan.eq(index)) == false) {
+                    index++;
+                }
+                while (isLeft(allSpan.eq(index + 1)) == false) {
+                    if (allSpan.eq(index).offset().left + allSpan.eq(index).outerWidth(true) > old) {
+                        break;
+                    }
+                    index++;
+                }
+            } else {
+                index++;
+                while (isLeft(allSpan.eq(index)) == false) {
+                    index++;
+                }
+            }
+
+
+            setCaretPos(allSpan.eq(index));
+            break;
+    }
+}
+
+
+//function aaa(s){
+//   //alert($("#"+s.id).parents('.card').children("code:odd"));
+//    //alert($("#a2_1").position().left);
+//    //alert(isLeft($('#a2_1')));
+//    //autoBreakLine();
+//}
+//function isLastCode(obj){
+//    if(isLastChild(obj)){
+//        return true;
+//    }else{
+//        if(obj[0].className=='firstline'){
+//            if(obj.next().children().length==0){
+//                return isLastChild(obj.next());
+//            }else{
+//                return false;
+//            }
+//        }else if (obj[0].className=='secondline'){
+//            return false;
+//        }else{
+//            alert('islastchild');
+//        }
+//    }
+//}
+//function getCaretNum() {
+////    range= window.getSelection().getRangeAt(0);
+////    start = range.startOffset;
+////    console.log(start);
+////    return start;
+////}
+
+//function isFirstCode(obj){
+//    return isFirstChild(obj);
+//}
+function isLastChild(obj2){
+    var obj1=obj2.parent();
+    //console.log(obj1.children(":last")[0].id);
+    var result=obj1.children(":last")[0]==obj2[0]
+    return result;
+}
+
+//function getparanode(dir){
+//    var obj=getCaretPos();
+//    if(obj[0].tagName=="DIV"){
+//        var num =parseInt(getCaretNum()/2);
+//        if(dir='forward'){
+//            var result=obj.children().eq(num+1);
+//        }else if(dir='backward'){
+//            var result=obj.children().eq(num);
+//        }else{
+//            alert('getparanode');
+//        }
+//        alert(result.attr('id'));
+//        return result;
+//    }
+//}
+/*function movecode(dir){
+ //获取自己同胞位置 光标跳转过去根据dir 判断是不是最后 是的话我们就跳转到下一个卡片第一个span
+ var obj;
+ var s=window.getSelection()
+ var r=s.getRangeAt(0)
+ switch(dir){
+ case 'forward':
+ if(isLastCode(getCaretPos().parent())){//span的父亲是code
+ //下一个卡片;
+ //alert('nextcard');
+ if(getCaretPos().parent().parent()[0].id=='jt'){
+ obj=$('#gr').children().children(":first")[0];
+ }else{
+ obj=getCaretPos().parent().parent().next().next().children().children(":first")[0];
+ }
+ }else{
+ //alert(getCaretPos().parent().next().children().length==0);
+ obj=getCaretPos().parent().next().children().length==0?getCaretPos().parent().next().next().children(":first")[0]:getCaretPos().parent().next().children(":first")[0];//判断备用code是否有span
+ //alert(obj.id);
+ }
+ r.setStartBefore(obj, 0);
+ r.setEndBefore(obj,0);
+ break;
+ case 'backward':
+ //alert(getCaretPos().parent()[0].id);
+ if(isFirstCode(getCaretPos().parent())){
+ if(getCaretPos().parent().parent()[0].id=='gr'){
+ obj=$('#jt').children().children(":last")[0];//第一个的话我们就回到最后一个
+ }else{
+ obj=getCaretPos().parent().parent().prev().prev().children().children(":last")[0];
+ }
+ }else{
+ obj=getCaretPos().parent().prev().children().length==0?getCaretPos().parent().prev().prev().children(":last")[0]:getCaretPos().parent().prev().children(":last")[0];//判断备用code是否有span
+ }
+ r.setStartAfter(obj, 0);
+ r.setEndAfter(obj, 0);
+ break;
+ }
+ console.log(obj.id);
+ s.removeAllRanges();
+ s.addRange(r);
+ }*/
+/*switch(dir){
+ case 'forward':
+ if(isLastChild(getCaretPos())){
+ movecode('forward');
+ return;
+ }else{
+ obj=getCaretPos().next()[0];
+ }
+ r.setStartBefore(obj, 0);
+ r.setEndBefore(obj,0);
+ break;
+ case 'backward':
+ if(isFirstChild(getCaretPos())){
+ movecode('backward');
+ return;
+ }else{
+ obj=getCaretPos().prev()[0];
+ }
+ r.setStartAfter(obj, 0);
+ r.setEndAfter(obj, 0);
+ break;
+ }*/
+//alert(obj.innerText);
+//s.removeAllRanges();
+//s.addRange(r);
+//console.log(obj.id);
+/*function selectcode() {
+ if(obj[0].tagName=="SPAN"){
+ //其他选择的选择器去除  选择这个的父类的code  +css代码
+ }else if(obj[0].tagName=="DIV"){
+ //全部都不选择
+ }
+ else
+ {
+ alert("autoBreakLine")
+ }
+ }*/
+
+//*********************
+//******删除增加字******
+//*********************
+function removeSpan(obj) {
+    var nowspan;
+    if (obj[0].tagName == "SPAN") {
+        //判断是不是逗号，是的话删除整个code
+        //判断是不是最后一个 是的话删除整个code
+        //不是的话，删除这个span
+        //obj.parent().children('.selectSpan').remove();
+        if (obj.hasClass('newspan')) {
+            return;
+        } else if (obj.hasClass('endspan')) {
+            var allSpan = $('#dk').find('span');
+            var i0;
+            for (var i = 0; i <= allSpan.length - 2; i++) {
+                i0 = i;
+                if (allSpan.eq(i)[0] == obj[0]) {
+                    break;
+                }
+            }
+            nowspan = allSpan.eq(i0 + 1);
+            $('.selectSpan').remove();
+            setCaretPos(nowspan);
+        } else {
+            nowspan = getCaretPos().next()
+            $('.selectSpan').remove();
+            setCaretPos(nowspan);
+        }
+
+        //if(nowspan[0].tagName=="SPAN"){
+
+        //}
+    }
+    /*else if(obj.tagName=="DIV"){
+     //获取上个code 删除code
+     }*/
+    else {
+        console.log("remove");
+    }
+    autoBreakLine();
+}
+
+function addspan(obj, s, classname, py) {
+    //拼音用于重新选择 类名看是不是地址还是症状
+    if (obj[0].tagName == "SPAN") {
+        //判断span是不是逗号 是的话在下面一行preappend
+        // 不是的话计算出同胞位置 从后面inserafter
+        //alert(("<span  class='"+classname+"'>"+s+("</span>")));
+        if (obj.hasClass('newspan')) {
+            $("<span  class='" + classname + "'>" + s + ("</span>")).insertBefore(obj);
+            setCaretPos(getCaretPos().prev());
+        } else {
+            $("<span  class='" + classname + "'>" + s + ("</span>")).insertAfter(obj);
+            if (obj.next().hasClass('endspan')) {
+                setCaretPos(obj.next().next());
+            } else {
+                setCaretPos(obj.next());
+            }
+        }
+        autoBreakLine();
+    }
+    /*else if(obj[0].tagName=="DIV"){
+     //getCaretNum 后面有没有code 有的话算出下一个code preappend
+     //没有的话上一个code append
+     }*/
+    else {
+        console.log("addspan")
+    }
+
+}
+
+function newline(obj) {
+    if (obj.tagName == "SPAN") {
+        //获取后面的span 获取现在的同胞位置  加逗号span在最后一个span之后（不要id）添加class生成新的两个code append上span 获取焦点
+    }
+    /*else if(obj.tagName=="DIV"){
+     //获取现在的同胞位置  加逗号在最后一个span（不要id）添加class生成新的两个code 获取焦点
+     }*/
+    else {
+        console.log("newline")
+    }
+}
+
+//**************************
+//*********卡片***********
+//**********************
+
+function addElementDiv() {//增加卡片
+    var e = "'demo-files/card-hero.jpg'";
+    $("#rightMenu").append('<div class="card rich-card inforcards" z=2><div class="card-hero" style="background-image: url(' + e + ')">		<h1>Kangaroo Valley Safari</h1>	</div>	<div class="divider"></div>	<div class="card-footer">		<button class="button flat">Share</button>		<button class="button flat color-orange-500">Explore</button>	</div></div>');
+}
+
+
+//判断状态函数
+function getState(){
+    if($('#inputmenu')[0].hidden==false){
+        //if(typeof($('#inputmenu').attr("hidden"))=="undefined"){
+        return 'type';
+    }else if($('#numberInputMenu')[0].hidden==false){
+        return 'numberInput';
+    }else if($('#charSelectMenu')[0].hidden==false){
+        return 'charSelect';
+    }else if($('#unitSelectMenu')[0].hidden==false){
+        return 'unitSelect';
+    }else if($('#tipsMenu')[0].hidden==false){
+        return 'tips';
+    }else if($('#positonMenu')[0].hidden==false){
+        return 'positon';
+    }else if($('#numSelectMenu')[0].hidden==false){
+        return 'numSelect';
+    } else{
+        return 'nottype';
+    }
+}
+
+function inputerChange(){
+    if($('#inputer').val()==''){
+    };
+    $.ajax({type : "POST",
+        url : "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
+        data : {
+            "order":"searchtermbyletter","string":"toutong"
+        },
+        success : function(result) {
+            alert(result)
+
+        }
+    });
+    for(var i=0;i<=20;i++){
+        var ab={value:'ab',class:'symptem'};ab.value=i;
+        termAjax[i]=ab;
+        baiduAjax[i]=ab;
+    }
+    $('#baidu').attr('page',0);
+    $('#term').attr('page',0);
+    for(var i=0;i<=4;i++){
+        $('#baidu').children().eq(i).text(baiduAjax[i].value);
+        $('#term').children().eq(i).text(termAjax[i].value);
+    }
+
+}

@@ -1,0 +1,313 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>电子病历</title>
+    <link rel="stylesheet" href="css/material.css"/>
+    <script src="js/material.js"></script>
+    <script language="javascript" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/js.js"></script>
+
+</head>
+<!--//<script type="text/javascript" src="js/py.js"></script>-->
+
+
+<body onLoad="onload()">
+
+
+<div id="rightMenu" class="sidemenu sidebar responsive">
+
+    <input type="text" class="text-input border-blue-500" style="width:98%;" placeholder="搜索">
+    <p></p>
+    <p></p>
+    <p></p>
+</div>
+
+<div class="dialog" id="login" hidden>
+
+
+        <div class="text-input-container">
+            <i class=" icon-account-circle text-input-icon"></i>
+            <input type="text" class="text-input border-green-500" placeholder="用户名"/>
+            <p>
+            </p>
+            <p>
+            </p></div>
+        <div class="text-input-container">
+            <i class="  icon-lock-outline text-input-icon"></i>
+            <input type="text" class="text-input border-green-500" placeholder="密码"/>
+        <p>
+            </p>
+            <p>
+            </p>
+        </div>
+    <p>
+    </p>
+    <p>
+    </p>
+        <div class="dialog-footer">
+        <button class="button">管理员</button>
+		<span class="float-right">
+			<button class="button dialog-close">注册</button>
+			<button class="button color-blue-500 dialog-confirm">登录</button>
+		</span>
+    </div>
+</div>
+
+
+
+<div  id="leftMenu" class="sidemenu sidebar responsive" z=999 hidden>
+    <div class="sidemenu-hero fade">
+        <img class="avatar" src="demo-files/avatar.jpg"/>
+        <img class="sidemenu-hero-image" src="demo-files/sidemenu-hero.jpg"/>
+        <span class="title">主治医师</span>
+        <span class="text">张三</span>
+    </div>
+    <div class="bg-Grey-100" style="vertical-align: middle;margin-left:0;height: 5%;width: 100%">
+        <div class="switch bg-Grey-100" style="margin-left:1em;margin-top:1em;height: 5%; ">
+            <input type="checkbox" id="switch"/>
+            <label for="switch"></label>
+            <label class="form-control-label" style="font-size: 20px;">固定</label>
+            <input type="checkbox" onclick="$('.card').attr('contentEditable',this.checked);" checked id="editable" />
+            <label for="editable" ></label>
+            <label class="form-control-label" style="font-size: 20px;">编辑</label>
+        </div>
+    </div>
+
+    <div id="my-menu">
+        <div id="my-menu-left">
+            <div class="my-menu-section" id="m1">
+                病历列表
+            </div>
+            <div class="my-menu-section bg-Grey-100" id="m2">
+                2222
+            </div>
+            <div class="my-menu-section bg-Grey-100" id="m3">
+                33
+            </div>
+            <div class="my-menu-section bg-Grey-100" id="m4">
+                334
+            </div>
+            <div class="my-menu-section bg-Grey-100" id="m5">
+                335
+            </div>
+        </div>
+        <div  id="my-menu-right" >
+            <ul class="menu"> <li ripple><a href="#">Open file</a></li> <li class="divider"></li> <li ripple><a href="#">Reload file</a></li></ul>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="main-content">
+    <ul class="toolbar tabs bg-Blue-500 color-white">
+        <li ripple id="tb_1" class=selected
+            onclick="$('li.selected').removeClass('selected');$('#tb_1').addClass('selected')"><a href="#gr">个人信息</a>
+        </li>
+        <li ripple id="tb_2" onclick="$('li.selected').removeClass('selected');$('#tb_2').addClass('selected')"><a
+                href="#br">病人主诉</a></li>
+        <li ripple id="tb_3" onclick="$('li.selected').removeClass('selected');$('#tb_3').addClass('selected')"><a
+                href="#tg">体格检查</a></li>
+        <li ripple id='tb_4' onclick="$('li.selected').removeClass('selected');$('#tb_4').addClass('selected')"><a
+                href="#jw">既往病史</a></li>
+        <li ripple id="tb_5" onclick="$('li.selected').removeClass('selected');$('#tb_5').addClass('selected')"><a
+                href="#jt">家庭病史</a></li>
+    </ul>
+
+    <div class="main-content" id="dk" >
+        <input name= "123" type="button" onclick="$('#inputmenu').attr('lll',document.getElementById('numberInputMenu'));
+    alert($('#inputmenu').attr('lll').id);"/>
+        <input type="text" name="fname" />
+
+        <div id='inputmenu' lll={} style="left: 50%;top: 50%;position: absolute;" hidden>
+            <input  id='inputer' type="text" style="opacity:0.8;float:top;background-color: white" class="text-input bg-Grey-100" onkeypress="inputerChange();this.size=(this.value.length>4?this.value.length:4);" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');$(this).addClass('bg-Grey-100')" size="4">
+            <div style="float:top;">
+                <ul style="width: 10%" page=0 class="menu" id="term">
+            </ul>
+            <ul style="width: 10%" page=0 class="menu" id="baidu">
+            </ul>
+            </div>
+            </div>
+
+
+        <div id='numberInputMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <input  id='numberInputer' type="text" style="opacity:0.8;float:top;background-color: white" class="text-input bg-Grey-100" onkeypress="inputerChange();this.size=(this.value.length>4?this.value.length:4);" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');$(this).addClass('bg-Grey-100')" size="4">
+            <div style="float:top;">
+                <ul style="width: 10%" page=0 class="menu" id="mainNum">
+                </ul>
+                <ul style="width: 10%" page=0 class="menu" id="otherNum">
+                </ul>
+            </div>
+        </div>
+
+        <div id='charSelectMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <ul style="width: 10%" page=0 class="menu" id="charSelectMenu0">
+                </ul>
+        </div>
+
+        <div id='unitSelectMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <div style="float:top;">
+                <ul style="width: 10%" page=0 class="menu" id="mainSelectUnit">
+                </ul>
+                <ul style="width: 10%" page=0 class="menu" id="otherSelectUnit">
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div id='tipsMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <ul style="width: 10%" page=0 class="menu" >
+                <li id="tips"> </li>
+            </ul>
+        </div>
+
+        <div id='positonMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <input type="range" class="slider"/>
+        </div>
+
+        <div id='numSelectMenu' style="left: 50%;top: 50%;position: absolute;" >
+            <input type="range" class="slider"/>
+        </div>
+
+        <div style="width:96%;margin-left:auto; margin-right:auto;"> 个人信息</div>
+        <div class="card"  contenteditable="true" id="gr" z=3>
+            <code class="firstline" id="a1">
+                <span  class="position" id="a1_1">也就是</span>
+                <span  class="symptom" id="a1_2">撒旦法</span>
+                <span class="position" id="a1_3">撒旦法1</span>
+                <span class="time" id="a1_4">撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="endspan"> ,</span>
+            </code>
+            <code class="firstline" id="a3">
+                <span  class="position" id="a3_1">也就是</span>
+                <span  class="symptom" id="a3_2">撒旦法</span>
+                <span class="position" id="a3_3">撒旦法1</span>
+                <span class="time" id="a3_4">撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="time" >撒旦法</span>
+                <span class="endspan"> ,</span>
+                <span class="newspan">请在这里键入新内容</span>
+            </code>
+        </div>
+
+        <div style="width:96%;margin-left:auto; margin-right:auto;">病人主诉</div>
+        <div class="card" contenteditable="true"  id="br" z=3>
+            <code class="firstline" >
+                <span class="newspan">请在这里键入新内容</span>
+                </code>
+        </div>
+
+        <div style="width:96%;margin-left:auto; margin-right:auto;">  体格检查</div>
+        <div class="card" contenteditable="true" id="tg" z=3>
+            <code class="firstline" >
+                <span class="newspan">请在这里键入新内容</span>
+            </code>
+        </div>
+
+        <div style="width:96%;margin-left:auto; margin-right:auto;"> 既往病史</div>
+        <div class="card" contenteditable="true" id="jw" z=3>
+            <code class="firstline" >
+                <span class="newspan">请在这里键入新内容</span>
+            </code>
+        </div>
+
+        <div style="width:96%;margin-left:auto; margin-right:auto;"> 家庭病史</div>
+        <div class="card" contenteditable="true" id="jt" z=3>
+            <code class="firstline" >
+                <span class="newspan">请在这里键入新内容</span>
+            </code>
+        </div>
+        <p></p>
+        <p></p>
+        <button id="save" class="fab bg-blue-500 color-white" right onclick="window.open(window.location.href );"><i class="icon-create"></i></button>
+    </div>
+</div>
+
+</body>
+
+</html>

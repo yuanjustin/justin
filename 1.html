@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script language="javascript" type="text/javascript" src="jquery-1.11.3.min.js"></script>
+</head>
+<body>
+<span>account</span><input type="text" id='account'  />
+<span>passwords</span><input type="text" id='passwords'  />
+<input name= "123" type="button" onclick="ajax();"/>
+<script>
+function ajax(){
+    $.ajax({type : "POST",
+        url : "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
+        data : {
+            "order":"searchtermbyletter","string":"toutong"
+        },
+        success : function(result) {
+                alert(result)
+        }
+    });
+}
+</script>
+
+
+
+</body>
+</html>

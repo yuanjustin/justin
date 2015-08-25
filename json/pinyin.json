@@ -1,7 +1,10 @@
 [
-  {"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},
-  {"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},{"t":"1","class":"symptom"},
-  {"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},
-  {"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},{"t":"1","class":"baidu"},
-  {"t":"1","class":"baidu"}
+  [
+    {"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"d","class":"symptom"},{"value":"2","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},
+  {"value":"5","class":"symptom"},{"value":"4","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"},{"value":"1","class":"symptom"}
+  ],[
+  {"value":"1","class":"baidu"},{"value":"5","class":"baidu"},{"value":"1","class":"baidu"},{"value":"3","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},
+  {"value":"1","class":"baidu"},{"value":"5","class":"baidu"},{"value":"1","class":"baidu"},{"value":"54","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},{"value":"1","class":"baidu"},
+  {"value":"1","class":"baidu"}
+  ]
 ]

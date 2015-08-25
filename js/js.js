@@ -25,7 +25,9 @@ function onload() {
     document.getElementById("leftMenu").addEventListener("transitionend", function (){ autoBreakLine();});
     document.getElementById("leftMenu").addEventListener("webkitTransitionEnd", function (){ autoBreakLine();});
     window.mySpan={};
-    Dialog.show(document.querySelector('#login'))
+
+    //Dialog.show(document.querySelector('#login'))
+    window.unit=new Array();
     window.termAjax=new Array();
     window.baiduAjax=new Array();
     SideMenu.hide(document.querySelector('#leftMenu'));
@@ -50,7 +52,7 @@ function onload() {
     /* $(document).unbind('keydown').bind('keydown', function (event) {
      event.preventDefault();
      });*/
-    $('#dk').children('.card').click(clickSpan());
+    $('#dk').children('.card').click(clickSpan);
 
     $('#dk').keypress(function (event) {
         if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
@@ -111,14 +113,27 @@ function noTypeKeyPress(event) {
             $('#tipsMenu')[0].hidden=true;
             $('#positonMenu')[0].hidden=true;
             $('#numSelectMenu')[0].hidden=true;
-
             $('#inputmenu').offset({top:mySpan.offset().top,left:mySpan.offset().left+mySpan.outerWidth(true)});
-            $('#inputer').focus();
-            setCaretPos0($('#inputer'));
-            //ajaxTerm();
+            $('#inputer').focus(); //setCaretPos0($('#inputer'));
+            //inputerChange();
         }
         return false;//不要屏蔽按键
-    }else{
+    }else if(event>=48&&event<=57){
+        if(getState()!='numberInput'){
+            mySpan=getCaretPos();
+            $('#inputmenu')[0].hidden=true;
+            $('#unitSelectMenu')[0].hidden=true;
+            $('#charSelectMenu')[0].hidden=true;
+            $('#numberInputMenu')[0].hidden=false;
+            $('#tipsMenu')[0].hidden=true;
+            $('#positonMenu')[0].hidden=true;
+            $('#numSelectMenu')[0].hidden=true;
+            $('#numberInputMenu').offset({top:mySpan.offset().top,left:mySpan.offset().left+mySpan.outerWidth(true)});
+            $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
+            //inputerChange();
+        }
+        return false;//不要屏蔽按键
+    } else{
         switch (event) {
             case 8:
                 //alert($('#a1').children(":last").attr('id'));
@@ -179,6 +194,8 @@ function TypeKeyPress(event) {
     if((event>=65&&event<=90)||(event>=97&&event<=122)){
         return false;//不要屏蔽按键
         //ajaxTerm();
+    }else if(event>=48&&event<=57){
+        return false;//不要屏蔽按键
     }else{
         switch (event) {
             case 8:
@@ -246,9 +263,11 @@ function TypeKeyPress(event) {
                 if(page>0){
                     page--;
                     selectmenu.attr('page',page);
-                    var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax
+                    var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax;
+                    selectmenu.html('');
                     for(var i=0;i<=4;i++){
-                        selectmenu .children().eq(i).text(term[page*5+i].value);
+                        //selectmenu .children().eq(i).text(term[page*5+i].value);
+                        selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
                     }
                     selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
                     selectmenu.children(':first').addClass('bg-Grey-100');
@@ -258,16 +277,19 @@ function TypeKeyPress(event) {
                 var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
                 var page=selectmenu.attr('page');
                 var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax;
+                page++;
                 if(page*5<term.length){
-                    page++;
                     selectmenu.attr('page',page);
-                    if(page*5<=term.length){
+                    selectmenu.html('');
+                    if((page+1)*5<=term.length){
                         for(var i=0;i<=4;i++){
-                            selectmenu .children().eq(i).text(term[page*5+i].value);
+                            //selectmenu .children().eq(i).text(term[page*5+i].value);
+                            selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
                         }
                     }else{
                         for(var i=0;i<=term.length-page*5-1;i++){
-                            selectmenu .children().eq(i).text(term[page*5+i].value);
+                            //selectmenu .children().eq(i).text(term[page*5+i].value);
+                            selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
                         }
                     }
                     selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -309,6 +331,7 @@ function TypeKeyPress(event) {
 //    };
 //}
 function clickSpan() {
+
     $('#inputer').val('');
     $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
     $('#inputer').addClass('bg-Grey-100');
@@ -333,7 +356,6 @@ function clickSpan() {
         }
         selectChange();
     }
-
 }
 //**标记改变
 function selectChange() {
@@ -896,30 +918,63 @@ function getState(){
         return 'nottype';
     }
 }
-
+function numInputerChange() {
+    if ($('#numberInputer').val() == '') {
+        $('#numberInputMenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
+        $('#numberInputer').addClass('bg-Grey-100');
+        $('#numberInputMenu')[0].hidden = true;
+        setCaretPos($('.selectspan'));
+        return;
+    }
+    ;
+    $.getJSON(
+        "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
+        {
+            "order": "number", "number": $('#numberInputer').val()
+        },
+        function (result) {
+            unit = result;
+            $('#mainNum').attr('page', 0);
+            $('#otherNum').attr('page', 0);
+            $('#mainNum').html('');
+            $('#otherNum').html('');
+            for (var i = 0; i <= 4; i++) {
+                $('#mainNum').append('<li ' + 'class=' + baiduAjax[i].class + '>' + unit[i][0] + '</li>');
+                $('#otherNum').append('<li ' + 'class=' + termAjax[i].class + '>' + unit[0][i] + '</li>');
+            }
+        }
+    );
+}
 function inputerChange(){
     if($('#inputer').val()==''){
+        $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
+        $('#inputer').addClass('bg-Grey-100');
+        $('#inputmenu')[0].hidden=true;
+        setCaretPos($('.selectspan'));
+        return;
     };
-    $.ajax({type : "POST",
-        url : "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
-        data : {
-            "order":"searchtermbyletter","string":"toutong"
+    $.getJSON(
+        "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/pinyin.json",//路径你来决定
+        {
+            "order":"searchtermbyletter","string":$('#inputer').val()
         },
-        success : function(result) {
-            alert(result)
-
+        function(result) {
+            termAjax=result[0];
+            baiduAjax=result[1];
+            $('#baidu').attr('page',0);
+            $('#term').attr('page',0);
+            $('#baidu').html('');
+            $('#term').html('');
+            for(var i=0;i<=4;i++){
+                $('#baidu').append( '<li '+ 'class='+baiduAjax[i].class +'>'+baiduAjax[i].value +'</li>');
+                $('#term').append( '<li '+ 'class='+termAjax[i].class +'>'+termAjax[i].value +'</li>');
+            }
         }
-    });
-    for(var i=0;i<=20;i++){
-        var ab={value:'ab',class:'symptem'};ab.value=i;
-        termAjax[i]=ab;
-        baiduAjax[i]=ab;
-    }
-    $('#baidu').attr('page',0);
-    $('#term').attr('page',0);
-    for(var i=0;i<=4;i++){
-        $('#baidu').children().eq(i).text(baiduAjax[i].value);
-        $('#term').children().eq(i).text(termAjax[i].value);
-    }
+    );
+    //for(var i=0;i<=20;i++){
+    //    var ab={value:'ab',class:'symptem'};ab.value=i;
+    //    termAjax[i]=ab;
+    //    baiduAjax[i]=ab;
+    //}
 
 }

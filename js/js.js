@@ -202,62 +202,156 @@ function TypeKeyPress(event) {
                 return false;//不要屏蔽退格键
             case 40://向下
                 //判断是不是最后一个
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
-                if(selectmenu[0].tagName=='INPUT'){
-                    selectmenu.removeClass('bg-Grey-100');
-                    $('#term').children(':first').addClass('bg-Grey-100');
-                    return false;
-                }else{
-                    if(isLastChild(selectmenu)==false){
+                if (getState() == 'type') {
+                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                    if (selectmenu[0].tagName == 'INPUT') {
+                        selectmenu.removeClass('bg-Grey-100');
+                        $('#term').children(':first').addClass('bg-Grey-100');
+                        return false;
+                    } else {
+                        if (isLastChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.next().addClass('bg-Grey-100');
+                        }
+                        return true;
+                    }
+                } else if (getState() == 'numberInput') {
+                    var selectmenu = $('#mainNum').find('.bg-Grey-100');
+                    //if(selectmenu[0].tagName=='INPUT'){
+                    //    selectmenu.removeClass('bg-Grey-100');
+                    //    $('#term').children(':first').addClass('bg-Grey-100');
+                    //    return false;
+                    //}else{
+                    if (isLastChild(selectmenu) == false) {
                         selectmenu.removeClass('bg-Grey-100');
                         selectmenu.next().addClass('bg-Grey-100');
+                        var page = $('#mainNum').attr('page');
+                        var j = unit[page * 5 + (selectmenu.index() + 1)];
+                        $('#otherNum').html('');
+                        for (var i = 0; i <= 4; i++) {
+                            if (i <= j.length - 1) {
+                                $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                            }
+                        }
+                        $('#otherNum').children(':first').addClass('bg-Grey-100');
+
+                    }
+                    else {//换页下一页
+                        var page = $('#mainNum').attr('page');
+                        page++;
+                        if (page * 5 < unit.length) {
+                            $('#mainNum').attr('page', page);
+                            $('#mainNum').html('');
+                            $('#otherNum').attr('page', 0);
+                            $('#otherNum').html('');
+                            for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                if (i <= unit.length - 1) {
+                                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                }
+                                if (i - page * 5 <= unit[page * 5].length - 1) {
+                                    $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                }
+                            }
+                            $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherNum').children(':first').addClass('bg-Grey-100');
+                            $('#mainNum').children(':first').addClass('bg-Grey-100');
+                        }
+                    }
+                    return true;
+                    //}
+                }
+
+
+            case 38://向上
+                if (getState() == 'type') {
+                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                    if (selectmenu[0].tagName != 'INPUT') {
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                        } else {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#inputer').addClass('bg-Grey-100');
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (getState() == 'numberInput') {
+                    var selectmenu = $('#mainNum').find('.bg-Grey-100');
+                    if(isFirstChild(selectmenu)==false){
+                        selectmenu.removeClass('bg-Grey-100');
+                        selectmenu.prev().addClass('bg-Grey-100');
+                        var page = $('#mainNum').attr('page');
+                        var j = unit[page * 5 + (selectmenu.index() - 1)];
+                        $('#otherNum').html('');
+                        for (var i = 0; i <= 4; i++) {
+                            if (i <= j.length - 1) {
+                                $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                            }
+                        }
+                        $('#otherNum').children(':first').addClass('bg-Grey-100');
+                    }else{
+                        //todo
                     }
                     return true;
                 }
 
-            case 38://向上
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
-                if(selectmenu[0].tagName!='INPUT'){
-                    if(isFirstChild(selectmenu)==false){
+            case 37://向左
+                if (getState() == 'type') {
+                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                    if (selectmenu[0].tagName != 'INPUT') {
+                        if (selectmenu.parent()[0].id == 'term') {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#baidu').children(':first').addClass('bg-Grey-100');
+                        } else {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#term').children(':first').addClass('bg-Grey-100');
+                        }
+                        return true;
+                    }else{
+                        return false;
+                    }
+                } else if (getState() == 'numberInput') {
+                    var selectmenu = $('#otherNum').find('.bg-Grey-100');
+                    if (isFirstChild(selectmenu) == false) {
                         selectmenu.removeClass('bg-Grey-100');
                         selectmenu.prev().addClass('bg-Grey-100');
-                    }else{
-                        selectmenu.removeClass('bg-Grey-100');
-                        $('#inputer').addClass('bg-Grey-100');
+                    } else {
+                        //todo
                     }
                     return true;
-                }else{
-                    return false;
                 }
-            case 37://向左
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
-                if(selectmenu[0].tagName!='INPUT'){
-                    if(selectmenu.parent()[0].id=='term'){
-                        selectmenu.removeClass('bg-Grey-100');
-                        $('#baidu').children(':first').addClass('bg-Grey-100');
-                    }else{
-                        selectmenu.removeClass('bg-Grey-100');
-                        $('#term').children(':first').addClass('bg-Grey-100');
-                    }
-                    return true;
-                }else{
-                    return false;
-                }
+
             case 39://向右
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100');
-                if(selectmenu[0].tagName!='INPUT'){
-                    if(selectmenu.parent()[0].id=='term'){
-                        selectmenu.removeClass('bg-Grey-100');
-                        $('#baidu').children(':first').addClass('bg-Grey-100');
+                if (getState() == 'type') {
+                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                    if (selectmenu[0].tagName != 'INPUT') {
+                        if (selectmenu.parent()[0].id == 'term') {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#baidu').children(':first').addClass('bg-Grey-100');
+                        } else {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#term').children(':first').addClass('bg-Grey-100');
+                        }
+                        return true;
                     }else{
+                        return false;
+                    }
+                } else if (getState() == 'numberInput') {
+                    var selectmenu = $('#otherNum').find('.bg-Grey-100');
+                    if (isLastChild(selectmenu) == false) {
                         selectmenu.removeClass('bg-Grey-100');
-                        $('#term').children(':first').addClass('bg-Grey-100');
+                        selectmenu.next().addClass('bg-Grey-100');
+                    }
+                    else {
+                        //todo
                     }
                     return true;
-                }else{
-                    return false;
                 }
-            case 33:
+
+            case 33://换页
                 var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
                 var page=selectmenu.attr('page');
                 if(page>0){
@@ -939,13 +1033,16 @@ function numInputerChange() {
             $('#mainNum').html('');
             $('#otherNum').html('');
             for (var i = 0; i <= 4; i++) {
-                if(i<=unit.length){
-                    $('#mainNum').append('<li ' + 'class=' + unit[i][0].class + '>' + unit[i][0].value + '</li>');
+                if (i <= unit.length - 1) {
+                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                 }
-                if(i<=unit[0].length){
-                    $('#otherNum').append('<li ' + 'class=' + unit[0][i].class + '>' + unit[0][i].value + '</li>');
+                if (i <= unit[0].length - 1) {
+                    $('#otherNum').append('<li>' + '<span class=number>' + unit[0][i].value + '</span><span class="unit">' + unit[0][i].unit + '</span></li>');
                 }
             }
+            $('#mainNum').children(':first').addClass('bg-Grey-100');
+            $('#otherNum').children(':first').addClass('bg-Grey-100');
+
         }
     );
 }
@@ -973,6 +1070,7 @@ function inputerChange(){
                 $('#baidu').append( '<li '+ 'class='+baiduAjax[i].class +'>'+baiduAjax[i].value +'</li>');
                 $('#term').append( '<li '+ 'class='+termAjax[i].class +'>'+termAjax[i].value +'</li>');
             }
+
         }
     );
     //for(var i=0;i<=20;i++){

@@ -111,7 +111,6 @@ function noTypeKeyPress(event) {
     //alert(event);
     if ((event >= 65 && event <= 90) || (event >= 97 && event <= 122)) {
         if (getState() != 'type') {
-            mySpan = getCaretPos();
             $('#inputmenu')[0].hidden = false;
             $('#unitSelectMenu')[0].hidden = true;
             $('#charSelectMenu')[0].hidden = true;
@@ -119,14 +118,13 @@ function noTypeKeyPress(event) {
             $('#tipsMenu')[0].hidden = true;
             $('#positonMenu')[0].hidden = true;
             $('#numSelectMenu')[0].hidden = true;
-            $('#inputmenu').offset({top: mySpan.offset().top, left: mySpan.offset().left + mySpan.outerWidth(true)});
+            setDivPosi($('#inputmenu'), getCaretPos());
             $('#inputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
         return false;//不要屏蔽按键
     } else if (event >= 48 && event <= 57) {
         if (getState() != 'numberInput') {
-            mySpan = getCaretPos();
             $('#inputmenu')[0].hidden = true;
             $('#unitSelectMenu')[0].hidden = true;
             $('#charSelectMenu')[0].hidden = true;
@@ -134,10 +132,7 @@ function noTypeKeyPress(event) {
             $('#tipsMenu')[0].hidden = true;
             $('#positonMenu')[0].hidden = true;
             $('#numSelectMenu')[0].hidden = true;
-            $('#numberInputMenu').offset({
-                top: mySpan.offset().top,
-                left: mySpan.offset().left + mySpan.outerWidth(true)
-            });
+            setDivPosi($('#numberInputMenu'), getCaretPos());
             $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
@@ -789,6 +784,7 @@ function clickSpan() {
             $('#numSelectMenu')[0].hidden = false;
         } else if (obj.hasClass('unit')) {
             $('#unitSelectMenu')[0].hidden = false;
+            setDivPosi($('#unitSelectMenu'), getCaretPos());
             $.getJSON(
                 "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
                 {
@@ -810,13 +806,10 @@ function clickSpan() {
                     }
                     $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
                     $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-
                 }
             );
-
-
         } else if (obj.hasClass('position')) {
-            $('#inputmenu')[0].hidden = false;
+            $('#positonMenu')[0].hidden = false;
         } else if (obj.hasClass('endspan') || obj.hasClass('newspan')) {
         } else {
             $('#charSelectMenu')[0].hidden = false;
@@ -1452,5 +1445,8 @@ function inputerChange() {
     //    termAjax[i]=ab;
     //    baiduAjax[i]=ab;
     //}
+}
 
+function setDivPosi(obj, objto) {
+    obj.offset({top: objto.offset().top, left: objto.offset().left + objto.outerWidth(true)});
 }

@@ -62,7 +62,7 @@ function onload() {
         if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
             event.which = event.charCode || event.keyCode;
         }
-        if (getState() == 'type') {
+        if (getState() != 'noType') {
             if (TypeKeyPress(event.which)) {//判断按键并且返回是否屏蔽
                 event.preventDefault();//屏蔽按键
             }
@@ -78,13 +78,13 @@ function onload() {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
-            if (getState() == 'type' || getState() == 'numberInput') {
-                if (TypeKeyPress(event.which)) {
+            if (getState() == 'noType') {
+                if (noTypeKeyPress(event.which)) {
                     return false;
                 }
                 ;
             } else {
-                if (noTypeKeyPress(event.which)) {
+                if (TypeKeyPress(event.which)) {
                     return false;
                 }
                 ;
@@ -201,10 +201,40 @@ function noTypeKeyPress(event) {
 function TypeKeyPress(event) {
     //alert(event);
     if ((event >= 65 && event <= 90) || (event >= 97 && event <= 122)) {
+        if (getState() != 'type') {
+            mySpan = getCaretPos();
+            $('#inputmenu')[0].hidden = false;
+            $('#unitSelectMenu')[0].hidden = true;
+            $('#charSelectMenu')[0].hidden = true;
+            $('#numberInputMenu')[0].hidden = true;
+            $('#tipsMenu')[0].hidden = true;
+            $('#positonMenu')[0].hidden = true;
+            $('#numSelectMenu')[0].hidden = true;
+            $('#inputmenu').offset({top: mySpan.offset().top, left: mySpan.offset().left + mySpan.outerWidth(true)});
+            $('#inputer').focus(); //setCaretPos0($('#inputer'));
+            //inputerChange();
+        }
+        return false;//不要屏蔽按键
+
+    } else if (event >= 48 && event <= 57) {
+        if (getState() != 'numberInput') {
+            mySpan = getCaretPos();
+            $('#inputmenu')[0].hidden = true;
+            $('#unitSelectMenu')[0].hidden = true;
+            $('#charSelectMenu')[0].hidden = true;
+            $('#numberInputMenu')[0].hidden = false;
+            $('#tipsMenu')[0].hidden = true;
+            $('#positonMenu')[0].hidden = true;
+            $('#numSelectMenu')[0].hidden = true;
+            $('#numberInputMenu').offset({
+                top: mySpan.offset().top,
+                left: mySpan.offset().left + mySpan.outerWidth(true)
+            });
+            $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
+            //inputerChange();
+        }
         return false;//不要屏蔽按键
         //ajaxTerm();
-    } else if (event >= 48 && event <= 57) {
-        return false;//不要屏蔽按键
     } else {
         switch (event) {
             case 8:
@@ -271,9 +301,53 @@ function TypeKeyPress(event) {
                         return true;
                     case 'charSelect':
                     case 'unitSelect':
+                        var selectmenu = $('#mainSelectUnit').find('.bg-Grey-100');
+                        //if(selectmenu[0].tagName=='INPUT'){
+                        //    selectmenu.removeClass('bg-Grey-100');
+                        //    $('#term').children(':first').addClass('bg-Grey-100');
+                        //    return false;
+                        //}else{
+                        if (isLastChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.next().addClass('bg-Grey-100');
+                            var page = $('#mainSelectUnit').attr('page');
+                            var j = unit[page * 5 + (selectmenu.index() + 1)];
+                            $('#otherSelectUnit').html('');
+                            for (var i = 0; i <= 4; i++) {
+                                if (i <= j.length - 1) {
+                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                }
+                            }
+                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+
+                        }
+                        else {//换页下一页
+                            var page = $('#mainSelectUnit').attr('page');
+                            page++;
+                            if (page * 5 < unit.length) {
+                                $('#mainSelectUnit').attr('page', page);
+                                $('#mainSelectUnit').html('');
+                                $('#otherSelectUnit').attr('page', 0);
+                                $('#otherSelectUnit').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i <= unit.length - 1) {
+                                        $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    }
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    }
+                                }
+                                $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                                $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+
                 }
 
 
@@ -335,6 +409,42 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+                        var selectmenu = $('#mainSelectUnit').find('.bg-Grey-100');
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                            var page = $('#mainSelectUnit').attr('page');
+                            var j = unit[page * 5 + (selectmenu.index() - 1)];
+                            $('#otherSelectUnit').html('');
+                            for (var i = 0; i <= 4; i++) {
+                                if (i <= j.length - 1) {
+                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                }
+                            }
+                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                        } else {//上一页
+                            var page = $('#mainSelectUnit').attr('page');
+                            if (page > 0) {
+                                page--;
+                                $('#mainSelectUnit').attr('page', page);
+                                $('#mainSelectUnit').html('');
+                                $('#otherSelectUnit').attr('page', 0);
+                                $('#otherSelectUnit').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i <= unit.length - 1) {
+                                        $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    }
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    }
+                                }
+                                $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                                $('#mainSelectUnit').children(':last').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
                 }
 
             case 37://向左
@@ -380,6 +490,27 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+                        var selectmenu = $('#otherSelectUnit').find('.bg-Grey-100');
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                        } else {
+                            var page = $('#otherSelectUnit').attr('page');
+                            var mainIndex = $('#mainSelectUnit').find('.bg-Grey-100').index() + $('#mainSelectUnit').attr('page') * 5;
+                            if (page > 0) {
+                                page--;
+                                $('#otherSelectUnit').attr('page', page);
+                                $('#otherSelectUnit').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                    }
+                                }
+                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children(':last').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
                 }
 
             case 39://向右
@@ -426,6 +557,28 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+                        var selectmenu = $('#otherSelectUnit').find('.bg-Grey-100');
+                        if (isLastChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.next().addClass('bg-Grey-100');
+                        }
+                        else {//otherSelectUnit 下一页
+                            var page = $('#otherSelectUnit').attr('page');
+                            var mainIndex = $('#mainSelectUnit').find('.bg-Grey-100').index() + $('#mainSelectUnit').attr('page') * 5;
+                            page++;
+                            if (page * 5 < unit[mainIndex].length) {
+                                $('#otherSelectUnit').attr('page', page);
+                                $('#otherSelectUnit').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                    }
+                                }
+                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
                 }
 
 
@@ -473,6 +626,27 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+                        var page = $('#mainSelectUnit').attr('page');
+                        if (page > 0) {
+                            page--;
+                            $('#mainSelectUnit').attr('page', page);
+                            $('#mainSelectUnit').html('');
+                            $('#otherSelectUnit').attr('page', 0);
+                            $('#otherSelectUnit').html('');
+                            for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                if (i <= unit.length - 1) {
+                                    $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                }
+                                if (i - page * 5 <= unit[page * 5].length - 1) {
+                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                }
+                            }
+                            $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                            $('#mainSelectUnit').children(':last').addClass('bg-Grey-100');
+                        }
+                        return true;
                 }
 
 
@@ -530,6 +704,30 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
+                        var page = $('#mainSelectUnit').attr('page');
+                        page++;
+                        if (page * 5 < unit.length) {
+                            $('#mainSelectUnit').attr('page', page);
+                            $('#mainSelectUnit').html('');
+                            $('#otherSelectUnit').attr('page', 0);
+                            $('#otherSelectUnit').html('');
+                            for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                if (i <= unit.length - 1) {
+                                    $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                }
+                                if (i - page * 5 <= unit[page * 5].length - 1) {
+                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                }
+                            }
+                            $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+                            $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
+                            return true;
+                            //nextpage
+                            //判断还有没有下一页
+                            //有的话显示并且选择第一项目
+                        }
                 }
 
         }
@@ -574,8 +772,8 @@ function TypeKeyPress(event) {
 //    };
 //}
 function clickSpan() {
-
     $('#inputer').val('');
+    $('#numberInputer').val('');
     $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
     $('#inputer').addClass('bg-Grey-100');
     $('#inputmenu')[0].hidden = true;
@@ -588,9 +786,35 @@ function clickSpan() {
     obj = getCaretPos();
     if (obj[0].tagName == "SPAN") {
         if (obj.hasClass('number')) {
-            $('#numberInputMenu')[0].hidden = false;
+            $('#numSelectMenu')[0].hidden = false;
         } else if (obj.hasClass('unit')) {
             $('#unitSelectMenu')[0].hidden = false;
+            $.getJSON(
+                "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/num.json",//路径你来决定
+                {
+                    "order": "number", "number": 7
+                },
+                function (result) {
+                    unit = result;
+                    $('#mainSelectUnit').attr('page', 0);
+                    $('#otherSelectUnit').attr('page', 0);
+                    $('#mainSelectUnit').html('');
+                    $('#otherSelectUnit').html('');
+                    for (var i = 0; i <= 4; i++) {
+                        if (i <= unit.length - 1) {
+                            $('#mainSelectUnit').append('<li> <span class="unit">' + unit[i][0].unit + '</span></li>');
+                        }
+                        if (i <= unit[0].length - 1) {
+                            $('#otherSelectUnit').append('<li><span class="unit">' + unit[0][i].unit + '</span></li>');
+                        }
+                    }
+                    $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
+                    $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
+
+                }
+            );
+
+
         } else if (obj.hasClass('position')) {
             $('#inputmenu')[0].hidden = false;
         } else if (obj.hasClass('endspan') || obj.hasClass('newspan')) {
@@ -1158,7 +1382,7 @@ function getState() {
     } else if ($('#numSelectMenu')[0].hidden == false) {
         return 'numSelect';
     } else {
-        return 'nottype';
+        return 'noType';
     }
 }
 function numInputerChange() {

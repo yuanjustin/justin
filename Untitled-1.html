@@ -131,7 +131,7 @@
     alert($('#inputmenu').attr('lll').id);"/>
         <input type="text" name="fname"/>
 
-        <div id='inputmenu' lll={} style="left: 50%;top: 50%;position: absolute;" hidden>
+        <div id='inputmenu' style="left: 50%;top: 50%;position: absolute;" hidden>
             <input id='inputer' type="text" style="opacity:0.8;float:top;background-color: white"
                    class="text-input bg-Grey-100"
                    oninput="inputerChange();this.size=(this.value.length>4?this.value.length:4);"
@@ -140,10 +140,20 @@
                    size="4">
 
             <div style="float:top;">
-                <ul style="width: 10%" page=0 class="menu" id="term">
-                </ul>
-                <ul style="width: 10%" page=0 class="menu" id="baidu">
-                </ul>
+                <table>
+                    <tr>
+                        <td>
+                            <ul style=" float:top;" page=0 class="menu" id="baidu">
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul style="float:top;" page=0 class="menu" id="term">
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -165,11 +175,25 @@
         </div>
 
         <div id='charSelectMenu' style="left: 50%;top: 50%;position: absolute;">
-            <ul style="width: 10%" page=0 class="menu" id="charSelectMenu0">
-            </ul>
+            <button id='selectPageUp' class="button raised " style="font-size:20px;padding:0;" ;>←</button>
+            <button id='selectPageDown' class="button raised" style="font-size:20px;padding:0" ;>→</button>
+            <table>
+                <tr>
+                    <td>
+                        <ul style=" float:top;" page=0 class="menu" id="selectBaidu">
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <ul style="float:top;" page=0 class="menu" id="selectTerm">
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <div id='unitSelectMenu' style="left: 50%;top: 50%;position: absolute;">
+        <div id='unitSelectMenu' style="left: 50%;top: 50%;position: absolute;" hide>
             <div style="float:top;">
                 <ul style="width: 10%" page=0 class="menu" id="mainSelectUnit">
                 </ul>
@@ -185,12 +209,17 @@
             </ul>
         </div>
 
-        <div id='positonMenu' style="left: 50%;top: 50%;position: absolute;">
+        <div id='positonMenu' style="position: absolute;" hide>
             <input type="range" class="slider"/>
         </div>
 
-        <div id='numSelectMenu' style="left: 50%;top: 50%;position: absolute;">
-            <input type="range" class="slider"/>
+        <div id='numSelectMenu' style="position: absolute;
+        -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);">
+            <input type="range" id="numSelecter" class="slider" oninput="numSelecterChange();"
+                   onpropertychange="numSelecterChange();"
+                    />
         </div>
 
         <div style="width:96%;margin-left:auto; margin-right:auto;"> 个人信息</div>
@@ -200,7 +229,7 @@
                 <span class="symptom" id="a1_2">撒旦法</span>
                 <span class="position" id="a1_3">撒旦法1</span>
                 <span class="time" id="a1_4">撒旦法</span>
-                <span class="time">撒旦法</span>
+                <span class="number">15</span>
                 <span class="time">撒旦法</span>
                 <span class="unit">单位</span>
                 <span class="time">撒旦法</span>

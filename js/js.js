@@ -57,12 +57,46 @@ function onload() {
      event.preventDefault();
      });*/
     $('#dk').children('.card').click(clickSpan);
+    $('#selectPageUp').click(function () {
+        var page = $('#selectBaidu').attr('page');
+        if (page > 0) {
+            page--;
+            $('#selectBaidu').attr('page', page);
+            $('#selectBaidu').html('');
+            $('#selectTerm').html('');
+            for (var i = 0; i <= 4; i++) {
+                if (i <= baiduAjax.length - 1) {
+                    $('#selectBaidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</li>');
+                }
+                if (i <= termAjax.length - 1) {
+                    $('#selectTerm').append('<li style=" float:left;"' + 'class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</li>');
+                }
+            }
+        }
+    });
+    $('#selectPageDown').click(function () {
+        var page = $('#selectBaidu').attr('page');
+        page++;
+        if (page * 5 < baiduAjax.length || page * 5 < termAjax.length) {
+            $('#selectBaidu').attr('page', page);
+            $('#selectBaidu').html('');
+            $('#selectTerm').html('');
+            for (var i = 0; i <= 4; i++) {
+                if (i <= baiduAjax.length - 1) {
+                    $('#selectBaidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</li>');
+                }
+                if (i <= termAjax.length - 1) {
+                    $('#selectTerm').append('<li style=" float:left;"' + 'class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</li>');
+                }
+            }
+        }
+    });
 
     $('#dk').keypress(function (event) {
         if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
             event.which = event.charCode || event.keyCode;
         }
-        if (getState() != 'noType') {
+        if (getState() == 'type' || getState() == 'numberInput') {
             if (TypeKeyPress(event.which)) {//判断按键并且返回是否屏蔽
                 event.preventDefault();//屏蔽按键
             }
@@ -78,13 +112,13 @@ function onload() {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
-            if (getState() == 'noType') {
-                if (noTypeKeyPress(event.which)) {
+            if (getState() == 'type' || getState() == 'numberInput') {
+                if (TypeKeyPress(event.which)) {
                     return false;
                 }
                 ;
             } else {
-                if (TypeKeyPress(event.which)) {
+                if (noTypeKeyPress(event.which)) {
                     return false;
                 }
                 ;
@@ -239,15 +273,18 @@ function TypeKeyPress(event) {
                 switch (getState()) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                        if (selectmenu[0].tagName == 'INPUT') {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#term').children(':first').addClass('bg-Grey-100');
-                            return false;
-                        } else {
-                            if (isLastChild(selectmenu) == false) {
+                        if (selectmenu[0].tagName != 'INPUT') {
+                            if (selectmenu.parent()[0].id == 'term') {
+                                //selectmenu.removeClass('bg-Grey-100');
+                                //$('#baidu').children(':first').addClass('bg-Grey-100');
+                            } else if (selectmenu.parent()[0].id == 'baidu') {
                                 selectmenu.removeClass('bg-Grey-100');
-                                selectmenu.next().addClass('bg-Grey-100');
+                                $('#term').children(':first').addClass('bg-Grey-100');
                             }
+                            return true;
+                        } else {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#baidu').children(':first').addClass('bg-Grey-100');
                             return true;
                         }
                     case 'numberInput':
@@ -351,17 +388,19 @@ function TypeKeyPress(event) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100');
                         if (selectmenu[0].tagName != 'INPUT') {
-                            if (isFirstChild(selectmenu) == false) {
-                                selectmenu.removeClass('bg-Grey-100');
-                                selectmenu.prev().addClass('bg-Grey-100');
-                            } else {
+                            if (selectmenu.parent()[0].id == 'baidu') {
                                 selectmenu.removeClass('bg-Grey-100');
                                 $('#inputer').addClass('bg-Grey-100');
+                            }
+                            else {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#baidu').children(':first').addClass('bg-Grey-100');
                             }
                             return true;
                         } else {
                             return false;
                         }
+
                     case 'numberInput':
                         var selectmenu = $('#mainNum').find('.bg-Grey-100');
                         if (isFirstChild(selectmenu) == false) {
@@ -447,12 +486,24 @@ function TypeKeyPress(event) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100');
                         if (selectmenu[0].tagName != 'INPUT') {
-                            if (selectmenu.parent()[0].id == 'term') {
+                            if (isFirstChild(selectmenu) == false) {
                                 selectmenu.removeClass('bg-Grey-100');
-                                $('#baidu').children(':first').addClass('bg-Grey-100');
+                                selectmenu.prev().addClass('bg-Grey-100');
                             } else {
-                                selectmenu.removeClass('bg-Grey-100');
-                                $('#term').children(':first').addClass('bg-Grey-100');
+                                var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                                var page = selectmenu.attr('page');
+                                if (page > 0) {
+                                    page--;
+                                    selectmenu.attr('page', page);
+                                    var term = selectmenu[0].id == 'baidu' ? baiduAjax : termAjax;
+                                    selectmenu.html('');
+                                    for (var i = 0; i <= 4; i++) {
+                                        //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                        selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                    }
+                                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                    selectmenu.children(':first').addClass('bg-Grey-100');
+                                }
                             }
                             return true;
                         } else {
@@ -512,18 +563,40 @@ function TypeKeyPress(event) {
                 switch (getState()) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                        if (selectmenu[0].tagName != 'INPUT') {
-                            if (selectmenu.parent()[0].id == 'term') {
+                        if (selectmenu[0].tagName == 'INPUT') {
+                            //selectmenu.removeClass('bg-Grey-100');
+                            //$('#term').children(':first').addClass('bg-Grey-100');
+                            return false;
+                        } else {
+                            if (isLastChild(selectmenu) == false) {
                                 selectmenu.removeClass('bg-Grey-100');
-                                $('#baidu').children(':first').addClass('bg-Grey-100');
+                                selectmenu.next().addClass('bg-Grey-100');
                             } else {
-                                selectmenu.removeClass('bg-Grey-100');
-                                $('#term').children(':first').addClass('bg-Grey-100');
+                                var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                                var page = selectmenu.attr('page');
+                                var term = selectmenu[0].id == 'baidu' ? baiduAjax : termAjax;
+                                page++;
+                                if (page * 5 < term.length) {
+                                    selectmenu.attr('page', page);
+                                    selectmenu.html('');
+                                    if ((page + 1) * 5 <= term.length) {
+                                        for (var i = 0; i <= 4; i++) {
+                                            //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                            selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                        }
+                                    } else {
+                                        for (var i = 0; i <= term.length - page * 5 - 1; i++) {
+                                            //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                            selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                        }
+                                    }
+                                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                    selectmenu.children(':first').addClass('bg-Grey-100');
+                                }
                             }
                             return true;
-                        } else {
-                            return false;
                         }
+
                     case 'numberInput':
                         var selectmenu = $('#otherNum').find('.bg-Grey-100');
                         if (isLastChild(selectmenu) == false) {
@@ -589,7 +662,7 @@ function TypeKeyPress(event) {
                             selectmenu.html('');
                             for (var i = 0; i <= 4; i++) {
                                 //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
                             }
                             selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
                             selectmenu.children(':first').addClass('bg-Grey-100');
@@ -658,12 +731,12 @@ function TypeKeyPress(event) {
                             if ((page + 1) * 5 <= term.length) {
                                 for (var i = 0; i <= 4; i++) {
                                     //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                    selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                    selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
                                 }
                             } else {
                                 for (var i = 0; i <= term.length - page * 5 - 1; i++) {
                                     //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                    selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                    selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
                                 }
                             }
                             selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -767,6 +840,9 @@ function TypeKeyPress(event) {
 //    };
 //}
 function clickSpan() {
+    if (document.getElementById("editable").checked == false) {
+        return;
+    }
     $('#inputer').val('');
     $('#numberInputer').val('');
     $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -782,6 +858,21 @@ function clickSpan() {
     if (obj[0].tagName == "SPAN") {
         if (obj.hasClass('number')) {
             $('#numSelectMenu')[0].hidden = false;
+            var objto = getCaretPos();
+            $('#numSelecter').attr('max', Number(objto.text()) * 2);
+            $('#numSelecter').attr('min', 0);
+            $('#numSelecter').attr('defaultValue', Number(objto.text()));
+            $('#numSelecter').attr('card', objto.parent().parent().index());
+            $('#numSelecter').attr('code', objto.parent().index());
+            $('#numSelecter').attr('span', objto.index());
+            $('#numSelectMenu').offset({
+                top: objto.offset().top - $('#numSelectMenu').outerWidth(true) / 2,
+                left: objto.offset().left + objto.outerWidth(true)
+            });
+            $('#numSelectMenu').offset({
+                top: objto.offset().top - $('#numSelectMenu').outerWidth(true) / 2,
+                left: objto.offset().left + objto.outerWidth(true)
+            });
         } else if (obj.hasClass('unit')) {
             $('#unitSelectMenu')[0].hidden = false;
             setDivPosi($('#unitSelectMenu'), getCaretPos());
@@ -813,6 +904,25 @@ function clickSpan() {
         } else if (obj.hasClass('endspan') || obj.hasClass('newspan')) {
         } else {
             $('#charSelectMenu')[0].hidden = false;
+            setDivPosi($('#charSelectMenu'), getCaretPos());
+            $.getJSON(
+                "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/pinyin.json",//路径你来决定
+                {
+                    "order": "searchtermbyletter", "string": getCaretPos().attr('pinyin')
+                },
+                function (result) {
+                    termAjax = result[0];
+                    baiduAjax = result[1];
+                    $('#selectBaidu').attr('page', 0);
+                    $('#selectTerm').attr('page', 0);
+                    $('#selectBaidu').html('');
+                    $('#selectTerm').html('');
+                    for (var i = 0; i <= 4; i++) {
+                        $('#selectBaidu').append('<li style="float:left;"' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</li>');
+                        $('#selectTerm').append('<li style="float:left;"' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '</li>');
+                    }
+                }
+            );
         }
         selectChange();
     }
@@ -1434,8 +1544,8 @@ function inputerChange() {
             $('#baidu').html('');
             $('#term').html('');
             for (var i = 0; i <= 4; i++) {
-                $('#baidu').append('<li ' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</li>');
-                $('#term').append('<li ' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '</li>');
+                $('#baidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '  </li>');
+                $('#term').append('<li style="float:left"' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '  </li>');
             }
 
         }
@@ -1449,4 +1559,7 @@ function inputerChange() {
 
 function setDivPosi(obj, objto) {
     obj.offset({top: objto.offset().top, left: objto.offset().left + objto.outerWidth(true)});
+}
+function numSelecterChange() {
+    $('#dk').children().eq($('#numSelecter').attr('card')).children().eq($('#numSelecter').attr('code')).children().eq($('#numSelecter').attr('span')).text($('#numSelecter').val())
 }

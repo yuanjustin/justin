@@ -22,14 +22,18 @@
 //document.onselectionchange= (selectChange());
 function onload() {
     var md = new Material();
-    document.getElementById("leftMenu").addEventListener("transitionend", function (){ autoBreakLine();});
-    document.getElementById("leftMenu").addEventListener("webkitTransitionEnd", function (){ autoBreakLine();});
-    window.mySpan={};
+    document.getElementById("leftMenu").addEventListener("transitionend", function () {
+        autoBreakLine();
+    });
+    document.getElementById("leftMenu").addEventListener("webkitTransitionEnd", function () {
+        autoBreakLine();
+    });
+    window.mySpan = {};
 
     //Dialog.show(document.querySelector('#login'))
-    window.unit=new Array();
-    window.termAjax=new Array();
-    window.baiduAjax=new Array();
+    window.unit = new Array();
+    window.termAjax = new Array();
+    window.baiduAjax = new Array();
     SideMenu.hide(document.querySelector('#leftMenu'));
     //加入左菜单鼠标事件
     $('#leftMenu').hover(function () {
@@ -74,14 +78,16 @@ function onload() {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
-            if(getState()=='type'||getState()=='numberInput'){
-                if(TypeKeyPress(event.which)){
+            if (getState() == 'type' || getState() == 'numberInput') {
+                if (TypeKeyPress(event.which)) {
                     return false;
-                };
-            }else{
-                if(noTypeKeyPress(event.which)){
+                }
+                ;
+            } else {
+                if (noTypeKeyPress(event.which)) {
                     return false;
-                };
+                }
+                ;
             }
             //event.keyCode = 0 ;
             // event.returnValue=false;
@@ -95,7 +101,7 @@ function onload() {
 //***************
 //****各个事件***
 //***************
-function getTerm(){
+function getTerm() {
 
     //储存到全局变量
 
@@ -103,37 +109,40 @@ function getTerm(){
 //*****************************************键盘时间********************************
 function noTypeKeyPress(event) {
     //alert(event);
-    if((event>=65&&event<=90)||(event>=97&&event<=122)){
-        if(getState()!='type'){
-            mySpan=getCaretPos();
-            $('#inputmenu')[0].hidden=false;
-            $('#unitSelectMenu')[0].hidden=true;
-            $('#charSelectMenu')[0].hidden=true;
-            $('#numberInputMenu')[0].hidden=true;
-            $('#tipsMenu')[0].hidden=true;
-            $('#positonMenu')[0].hidden=true;
-            $('#numSelectMenu')[0].hidden=true;
-            $('#inputmenu').offset({top:mySpan.offset().top,left:mySpan.offset().left+mySpan.outerWidth(true)});
+    if ((event >= 65 && event <= 90) || (event >= 97 && event <= 122)) {
+        if (getState() != 'type') {
+            mySpan = getCaretPos();
+            $('#inputmenu')[0].hidden = false;
+            $('#unitSelectMenu')[0].hidden = true;
+            $('#charSelectMenu')[0].hidden = true;
+            $('#numberInputMenu')[0].hidden = true;
+            $('#tipsMenu')[0].hidden = true;
+            $('#positonMenu')[0].hidden = true;
+            $('#numSelectMenu')[0].hidden = true;
+            $('#inputmenu').offset({top: mySpan.offset().top, left: mySpan.offset().left + mySpan.outerWidth(true)});
             $('#inputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
         return false;//不要屏蔽按键
-    }else if(event>=48&&event<=57){
-        if(getState()!='numberInput'){
-            mySpan=getCaretPos();
-            $('#inputmenu')[0].hidden=true;
-            $('#unitSelectMenu')[0].hidden=true;
-            $('#charSelectMenu')[0].hidden=true;
-            $('#numberInputMenu')[0].hidden=false;
-            $('#tipsMenu')[0].hidden=true;
-            $('#positonMenu')[0].hidden=true;
-            $('#numSelectMenu')[0].hidden=true;
-            $('#numberInputMenu').offset({top:mySpan.offset().top,left:mySpan.offset().left+mySpan.outerWidth(true)});
+    } else if (event >= 48 && event <= 57) {
+        if (getState() != 'numberInput') {
+            mySpan = getCaretPos();
+            $('#inputmenu')[0].hidden = true;
+            $('#unitSelectMenu')[0].hidden = true;
+            $('#charSelectMenu')[0].hidden = true;
+            $('#numberInputMenu')[0].hidden = false;
+            $('#tipsMenu')[0].hidden = true;
+            $('#positonMenu')[0].hidden = true;
+            $('#numSelectMenu')[0].hidden = true;
+            $('#numberInputMenu').offset({
+                top: mySpan.offset().top,
+                left: mySpan.offset().left + mySpan.outerWidth(true)
+            });
             $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
         return false;//不要屏蔽按键
-    } else{
+    } else {
         switch (event) {
             case 8:
                 //alert($('#a1').children(":last").attr('id'));
@@ -191,52 +200,307 @@ function noTypeKeyPress(event) {
 }
 function TypeKeyPress(event) {
     //alert(event);
-    if((event>=65&&event<=90)||(event>=97&&event<=122)){
+    if ((event >= 65 && event <= 90) || (event >= 97 && event <= 122)) {
         return false;//不要屏蔽按键
         //ajaxTerm();
-    }else if(event>=48&&event<=57){
+    } else if (event >= 48 && event <= 57) {
         return false;//不要屏蔽按键
-    }else{
+    } else {
         switch (event) {
             case 8:
                 return false;//不要屏蔽退格键
             case 40://向下
                 //判断是不是最后一个
-                if (getState() == 'type') {
-                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                    if (selectmenu[0].tagName == 'INPUT') {
-                        selectmenu.removeClass('bg-Grey-100');
-                        $('#term').children(':first').addClass('bg-Grey-100');
-                        return false;
-                    } else {
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                        if (selectmenu[0].tagName == 'INPUT') {
+                            selectmenu.removeClass('bg-Grey-100');
+                            $('#term').children(':first').addClass('bg-Grey-100');
+                            return false;
+                        } else {
+                            if (isLastChild(selectmenu) == false) {
+                                selectmenu.removeClass('bg-Grey-100');
+                                selectmenu.next().addClass('bg-Grey-100');
+                            }
+                            return true;
+                        }
+                    case 'numberInput':
+                        var selectmenu = $('#mainNum').find('.bg-Grey-100');
+                        //if(selectmenu[0].tagName=='INPUT'){
+                        //    selectmenu.removeClass('bg-Grey-100');
+                        //    $('#term').children(':first').addClass('bg-Grey-100');
+                        //    return false;
+                        //}else{
+                        if (isLastChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.next().addClass('bg-Grey-100');
+                            var page = $('#mainNum').attr('page');
+                            var j = unit[page * 5 + (selectmenu.index() + 1)];
+                            $('#otherNum').html('');
+                            for (var i = 0; i <= 4; i++) {
+                                if (i <= j.length - 1) {
+                                    $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                }
+                            }
+                            $('#otherNum').children(':first').addClass('bg-Grey-100');
+
+                        }
+                        else {//换页下一页
+                            var page = $('#mainNum').attr('page');
+                            page++;
+                            if (page * 5 < unit.length) {
+                                $('#mainNum').attr('page', page);
+                                $('#mainNum').html('');
+                                $('#otherNum').attr('page', 0);
+                                $('#otherNum').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i <= unit.length - 1) {
+                                        $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    }
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    }
+                                }
+                                $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children(':first').addClass('bg-Grey-100');
+                                $('#mainNum').children(':first').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
+                }
+
+
+            case 38://向上
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                        if (selectmenu[0].tagName != 'INPUT') {
+                            if (isFirstChild(selectmenu) == false) {
+                                selectmenu.removeClass('bg-Grey-100');
+                                selectmenu.prev().addClass('bg-Grey-100');
+                            } else {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#inputer').addClass('bg-Grey-100');
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    case 'numberInput':
+                        var selectmenu = $('#mainNum').find('.bg-Grey-100');
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                            var page = $('#mainNum').attr('page');
+                            var j = unit[page * 5 + (selectmenu.index() - 1)];
+                            $('#otherNum').html('');
+                            for (var i = 0; i <= 4; i++) {
+                                if (i <= j.length - 1) {
+                                    $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                }
+                            }
+                            $('#otherNum').children(':first').addClass('bg-Grey-100');
+                        } else {//上一页
+                            var page = $('#mainNum').attr('page');
+                            if (page > 0) {
+                                page--;
+                                $('#mainNum').attr('page', page);
+                                $('#mainNum').html('');
+                                $('#otherNum').attr('page', 0);
+                                $('#otherNum').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i <= unit.length - 1) {
+                                        $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    }
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    }
+                                }
+                                $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children(':first').addClass('bg-Grey-100');
+                                $('#mainNum').children(':last').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
+                }
+
+            case 37://向左
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                        if (selectmenu[0].tagName != 'INPUT') {
+                            if (selectmenu.parent()[0].id == 'term') {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#baidu').children(':first').addClass('bg-Grey-100');
+                            } else {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#term').children(':first').addClass('bg-Grey-100');
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    case 'numberInput':
+                        var selectmenu = $('#otherNum').find('.bg-Grey-100');
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                        } else {
+                            var page = $('#otherNum').attr('page');
+                            var mainIndex = $('#mainNum').find('.bg-Grey-100').index() + $('#mainNum').attr('page') * 5;
+                            if (page > 0) {
+                                page--;
+                                $('#otherNum').attr('page', page);
+                                $('#otherNum').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                    }
+                                }
+                                $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children(':last').addClass('bg-Grey-100');
+                            }
+                        }
+                        return true;
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
+                }
+
+            case 39://向右
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                        if (selectmenu[0].tagName != 'INPUT') {
+                            if (selectmenu.parent()[0].id == 'term') {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#baidu').children(':first').addClass('bg-Grey-100');
+                            } else {
+                                selectmenu.removeClass('bg-Grey-100');
+                                $('#term').children(':first').addClass('bg-Grey-100');
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    case 'numberInput':
+                        var selectmenu = $('#otherNum').find('.bg-Grey-100');
                         if (isLastChild(selectmenu) == false) {
                             selectmenu.removeClass('bg-Grey-100');
                             selectmenu.next().addClass('bg-Grey-100');
                         }
-                        return true;
-                    }
-                } else if (getState() == 'numberInput') {
-                    var selectmenu = $('#mainNum').find('.bg-Grey-100');
-                    //if(selectmenu[0].tagName=='INPUT'){
-                    //    selectmenu.removeClass('bg-Grey-100');
-                    //    $('#term').children(':first').addClass('bg-Grey-100');
-                    //    return false;
-                    //}else{
-                    if (isLastChild(selectmenu) == false) {
-                        selectmenu.removeClass('bg-Grey-100');
-                        selectmenu.next().addClass('bg-Grey-100');
-                        var page = $('#mainNum').attr('page');
-                        var j = unit[page * 5 + (selectmenu.index() + 1)];
-                        $('#otherNum').html('');
-                        for (var i = 0; i <= 4; i++) {
-                            if (i <= j.length - 1) {
-                                $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                        else {//othernum 下一页
+                            var page = $('#otherNum').attr('page');
+                            var mainIndex = $('#mainNum').find('.bg-Grey-100').index() + $('#mainNum').attr('page') * 5;
+                            page++;
+                            if (page * 5 < unit[mainIndex].length) {
+                                $('#otherNum').attr('page', page);
+                                $('#otherNum').html('');
+                                for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                    if (i - page * 5 <= unit[page * 5].length - 1) {
+                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                    }
+                                }
+                                $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                                $('#otherNum').children(':first').addClass('bg-Grey-100');
                             }
                         }
-                        $('#otherNum').children(':first').addClass('bg-Grey-100');
+                        return true;
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
+                }
 
-                    }
-                    else {//换页下一页
+
+            case 33://换页
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                        var page = selectmenu.attr('page');
+                        if (page > 0) {
+                            page--;
+                            selectmenu.attr('page', page);
+                            var term = selectmenu[0].id == 'baidu' ? baiduAjax : termAjax;
+                            selectmenu.html('');
+                            for (var i = 0; i <= 4; i++) {
+                                //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                            }
+                            selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            selectmenu.children(':first').addClass('bg-Grey-100');
+                        }
+                    case 'numberInput':
+                        var page = $('#mainNum').attr('page');
+                        if (page > 0) {
+                            page--;
+                            $('#mainNum').attr('page', page);
+                            $('#mainNum').html('');
+                            $('#otherNum').attr('page', 0);
+                            $('#otherNum').html('');
+                            for (var i = page * 5; i <= page * 5 + 4; i++) {
+                                if (i <= unit.length - 1) {
+                                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                }
+                                if (i - page * 5 <= unit[page * 5].length - 1) {
+                                    $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                }
+                            }
+                            $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            $('#otherNum').children(':first').addClass('bg-Grey-100');
+                            $('#mainNum').children(':last').addClass('bg-Grey-100');
+                        }
+                        return true;
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
+                }
+
+
+            case 34:
+                switch (getState()) {
+                    case 'type':
+                        var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                        var page = selectmenu.attr('page');
+                        var term = selectmenu[0].id == 'baidu' ? baiduAjax : termAjax;
+                        page++;
+                        if (page * 5 < term.length) {
+                            selectmenu.attr('page', page);
+                            selectmenu.html('');
+                            if ((page + 1) * 5 <= term.length) {
+                                for (var i = 0; i <= 4; i++) {
+                                    //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                    selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                }
+                            } else {
+                                for (var i = 0; i <= term.length - page * 5 - 1; i++) {
+                                    //selectmenu .children().eq(i).text(term[page*5+i].value);
+                                    selectmenu.append('<li ' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                }
+                            }
+                            selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
+                            selectmenu.children(':first').addClass('bg-Grey-100');
+                        }
+                    case 'numberInput':
                         var page = $('#mainNum').attr('page');
                         page++;
                         if (page * 5 < unit.length) {
@@ -256,149 +520,34 @@ function TypeKeyPress(event) {
                             $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
                             $('#otherNum').children(':first').addClass('bg-Grey-100');
                             $('#mainNum').children(':first').addClass('bg-Grey-100');
+                            return true;
+                            //nextpage
+                            //判断还有没有下一页
+                            //有的话显示并且选择第一项目
                         }
-                    }
-                    return true;
-                    //}
+                    case 'charSelect':
+                    case 'unitSelect':
+                    case 'tips':
+                    case 'positon':
+                    case 'numSelect':
                 }
-
-
-            case 38://向上
-                if (getState() == 'type') {
-                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                    if (selectmenu[0].tagName != 'INPUT') {
-                        if (isFirstChild(selectmenu) == false) {
-                            selectmenu.removeClass('bg-Grey-100');
-                            selectmenu.prev().addClass('bg-Grey-100');
-                        } else {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#inputer').addClass('bg-Grey-100');
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (getState() == 'numberInput') {
-                    var selectmenu = $('#mainNum').find('.bg-Grey-100');
-                    if(isFirstChild(selectmenu)==false){
-                        selectmenu.removeClass('bg-Grey-100');
-                        selectmenu.prev().addClass('bg-Grey-100');
-                        var page = $('#mainNum').attr('page');
-                        var j = unit[page * 5 + (selectmenu.index() - 1)];
-                        $('#otherNum').html('');
-                        for (var i = 0; i <= 4; i++) {
-                            if (i <= j.length - 1) {
-                                $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
-                            }
-                        }
-                        $('#otherNum').children(':first').addClass('bg-Grey-100');
-                    }else{
-                        //todo
-                    }
-                    return true;
-                }
-
-            case 37://向左
-                if (getState() == 'type') {
-                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                    if (selectmenu[0].tagName != 'INPUT') {
-                        if (selectmenu.parent()[0].id == 'term') {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#baidu').children(':first').addClass('bg-Grey-100');
-                        } else {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#term').children(':first').addClass('bg-Grey-100');
-                        }
-                        return true;
-                    }else{
-                        return false;
-                    }
-                } else if (getState() == 'numberInput') {
-                    var selectmenu = $('#otherNum').find('.bg-Grey-100');
-                    if (isFirstChild(selectmenu) == false) {
-                        selectmenu.removeClass('bg-Grey-100');
-                        selectmenu.prev().addClass('bg-Grey-100');
-                    } else {
-                        //todo
-                    }
-                    return true;
-                }
-
-            case 39://向右
-                if (getState() == 'type') {
-                    var selectmenu = $('#inputmenu').find('.bg-Grey-100');
-                    if (selectmenu[0].tagName != 'INPUT') {
-                        if (selectmenu.parent()[0].id == 'term') {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#baidu').children(':first').addClass('bg-Grey-100');
-                        } else {
-                            selectmenu.removeClass('bg-Grey-100');
-                            $('#term').children(':first').addClass('bg-Grey-100');
-                        }
-                        return true;
-                    }else{
-                        return false;
-                    }
-                } else if (getState() == 'numberInput') {
-                    var selectmenu = $('#otherNum').find('.bg-Grey-100');
-                    if (isLastChild(selectmenu) == false) {
-                        selectmenu.removeClass('bg-Grey-100');
-                        selectmenu.next().addClass('bg-Grey-100');
-                    }
-                    else {
-                        //todo
-                    }
-                    return true;
-                }
-
-            case 33://换页
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
-                var page=selectmenu.attr('page');
-                if(page>0){
-                    page--;
-                    selectmenu.attr('page',page);
-                    var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax;
-                    selectmenu.html('');
-                    for(var i=0;i<=4;i++){
-                        //selectmenu .children().eq(i).text(term[page*5+i].value);
-                        selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
-                    }
-                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
-                    selectmenu.children(':first').addClass('bg-Grey-100');
-                }
-                return true;
-            case 34:
-                var selectmenu=$('#inputmenu').find('.bg-Grey-100').parent();
-                var page=selectmenu.attr('page');
-                var term=selectmenu[0].id=='baidu'?baiduAjax:termAjax;
-                page++;
-                if(page*5<term.length){
-                    selectmenu.attr('page',page);
-                    selectmenu.html('');
-                    if((page+1)*5<=term.length){
-                        for(var i=0;i<=4;i++){
-                            //selectmenu .children().eq(i).text(term[page*5+i].value);
-                            selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
-                        }
-                    }else{
-                        for(var i=0;i<=term.length-page*5-1;i++){
-                            //selectmenu .children().eq(i).text(term[page*5+i].value);
-                            selectmenu.append('<li '+ 'class='+term[page*5+i].class +'>'+term[page*5+i].value +'</li>');
-                        }
-                    }
-                    selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
-                    selectmenu.children(':first').addClass('bg-Grey-100');
-                }
-                return true;
-                //nextpage
-                //判断还有没有下一页
-                //有的话显示并且选择第一项目
 
         }
-        return true;//屏蔽按键
-    }
-}
 
+
+    }
+    return true;//屏蔽按键
+
+    /*switch(getState()) {
+     case 'type':
+     case 'numberInput':
+     case 'charSelect':
+     case 'unitSelect':
+     case 'tips':
+     case 'positon':
+     case 'numSelect':
+     }*/
+}
 
 
 //**********************************************************************
@@ -429,24 +578,24 @@ function clickSpan() {
     $('#inputer').val('');
     $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
     $('#inputer').addClass('bg-Grey-100');
-    $('#inputmenu')[0].hidden=true;
-    $('#unitSelectMenu')[0].hidden=true;
-    $('#charSelectMenu')[0].hidden=true;
-    $('#numberInputMenu')[0].hidden=true;
-    $('#tipsMenu')[0].hidden=true;
-    $('#positonMenu')[0].hidden=true;
-    $('#numSelectMenu')[0].hidden=true;
+    $('#inputmenu')[0].hidden = true;
+    $('#unitSelectMenu')[0].hidden = true;
+    $('#charSelectMenu')[0].hidden = true;
+    $('#numberInputMenu')[0].hidden = true;
+    $('#tipsMenu')[0].hidden = true;
+    $('#positonMenu')[0].hidden = true;
+    $('#numSelectMenu')[0].hidden = true;
     obj = getCaretPos();
     if (obj[0].tagName == "SPAN") {
-        if(obj.hasClass('number')){
-            $('#numberInputMenu')[0].hidden=false;
-        }else if(obj.hasClass('unit')){
-            $('#unitSelectMenu')[0].hidden=false;
-        }else if(obj.hasClass('position')){
-            $('#inputmenu')[0].hidden=false;
-        }else if(obj.hasClass('endspan')||obj.hasClass('newspan')){
-        } else{
-            $('#charSelectMenu')[0].hidden=false;
+        if (obj.hasClass('number')) {
+            $('#numberInputMenu')[0].hidden = false;
+        } else if (obj.hasClass('unit')) {
+            $('#unitSelectMenu')[0].hidden = false;
+        } else if (obj.hasClass('position')) {
+            $('#inputmenu')[0].hidden = false;
+        } else if (obj.hasClass('endspan') || obj.hasClass('newspan')) {
+        } else {
+            $('#charSelectMenu')[0].hidden = false;
         }
         selectChange();
     }
@@ -605,26 +754,26 @@ function isLeft(obj) {
 //*********************
 
 function isFirstChild(obj2) {
-    var obj1=obj2.parent();
+    var obj1 = obj2.parent();
     //console.log(obj1.children(":last")[0].id);
-    var result=obj1.children(":first")[0]==obj2[0]
+    var result = obj1.children(":first")[0] == obj2[0]
     return result;
 }
 
 //**设置获取指针
 function setCaretPos0(obj) {
-var s = window.getSelection();
-var r = s.getRangeAt(0);
+    var s = window.getSelection();
+    var r = s.getRangeAt(0);
 //if( dir=='forward'){
 //    r.setStartAfter(obj[0], 0);
 //    r.setEndBefore(obj[0], 0);
 //}else{
-r.setStart(obj[0], 0);
-r.setEnd(obj[0], 1);
+    r.setStart(obj[0], 0);
+    r.setEnd(obj[0], 1);
 //}
-s.removeAllRanges();
-s.addRange(r);
-selectChange();
+    s.removeAllRanges();
+    s.addRange(r);
+    selectChange();
 }
 function setCaretPos(obj) {
     var s = window.getSelection();
@@ -795,10 +944,10 @@ function movespan(dir) {
 //function isFirstCode(obj){
 //    return isFirstChild(obj);
 //}
-function isLastChild(obj2){
-    var obj1=obj2.parent();
+function isLastChild(obj2) {
+    var obj1 = obj2.parent();
     //console.log(obj1.children(":last")[0].id);
-    var result=obj1.children(":last")[0]==obj2[0]
+    var result = obj1.children(":last")[0] == obj2[0]
     return result;
 }
 
@@ -992,23 +1141,23 @@ function addElementDiv() {//增加卡片
 
 
 //判断状态函数
-function getState(){
-    if($('#inputmenu')[0].hidden==false){
+function getState() {
+    if ($('#inputmenu')[0].hidden == false) {
         //if(typeof($('#inputmenu').attr("hidden"))=="undefined"){
         return 'type';
-    }else if($('#numberInputMenu')[0].hidden==false){
+    } else if ($('#numberInputMenu')[0].hidden == false) {
         return 'numberInput';
-    }else if($('#charSelectMenu')[0].hidden==false){
+    } else if ($('#charSelectMenu')[0].hidden == false) {
         return 'charSelect';
-    }else if($('#unitSelectMenu')[0].hidden==false){
+    } else if ($('#unitSelectMenu')[0].hidden == false) {
         return 'unitSelect';
-    }else if($('#tipsMenu')[0].hidden==false){
+    } else if ($('#tipsMenu')[0].hidden == false) {
         return 'tips';
-    }else if($('#positonMenu')[0].hidden==false){
+    } else if ($('#positonMenu')[0].hidden == false) {
         return 'positon';
-    }else if($('#numSelectMenu')[0].hidden==false){
+    } else if ($('#numSelectMenu')[0].hidden == false) {
         return 'numSelect';
-    } else{
+    } else {
         return 'nottype';
     }
 }
@@ -1046,29 +1195,30 @@ function numInputerChange() {
         }
     );
 }
-function inputerChange(){
-    if($('#inputer').val()==''){
+function inputerChange() {
+    if ($('#inputer').val() == '') {
         $('#inputmenu').find('.bg-Grey-100').removeClass('bg-Grey-100');
         $('#inputer').addClass('bg-Grey-100');
-        $('#inputmenu')[0].hidden=true;
+        $('#inputmenu')[0].hidden = true;
         setCaretPos($('.selectspan'));
         return;
-    };
+    }
+    ;
     $.getJSON(
         "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/pinyin.json",//路径你来决定
         {
-            "order":"searchtermbyletter","string":$('#inputer').val()
+            "order": "searchtermbyletter", "string": $('#inputer').val()
         },
-        function(result) {
-            termAjax=result[0];
-            baiduAjax=result[1];
-            $('#baidu').attr('page',0);
-            $('#term').attr('page',0);
+        function (result) {
+            termAjax = result[0];
+            baiduAjax = result[1];
+            $('#baidu').attr('page', 0);
+            $('#term').attr('page', 0);
             $('#baidu').html('');
             $('#term').html('');
-            for(var i=0;i<=4;i++){
-                $('#baidu').append( '<li '+ 'class='+baiduAjax[i].class +'>'+baiduAjax[i].value +'</li>');
-                $('#term').append( '<li '+ 'class='+termAjax[i].class +'>'+termAjax[i].value +'</li>');
+            for (var i = 0; i <= 4; i++) {
+                $('#baidu').append('<li ' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</li>');
+                $('#term').append('<li ' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '</li>');
             }
 
         }

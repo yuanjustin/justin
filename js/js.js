@@ -57,6 +57,16 @@ function onload() {
         //$(this).addClass('lll');
     });
 
+    $('#unitSelectMenu').click(function (e) {
+        $('.bg-Grey-100').removeClass('bg-Grey-100');
+        if ($(e.target).children()[0].tagName == "SPAN") {
+            $(e.target).addClass('bg-Grey-100');
+            addspan();
+        }
+//todo 有的时候会死span有时候会死li
+        //alert(e.target.innerHTML)
+        //$(this).addClass('lll');
+    });
 
     //加入左菜单鼠标事件
     $('#leftMenu').hover(function () {
@@ -269,24 +279,36 @@ function TypeKeyPress(event) {
         return false;//不要屏蔽按键
 
     } else if (event >= 48 && event <= 57) {
-        if (getState() != 'numberInput') {
-            mySpan = getCaretPos();
-            $('#inputmenu')[0].hidden = true;
-            $('#unitSelectMenu')[0].hidden = true;
-            $('#charSelectMenu')[0].hidden = true;
-            $('#numberInputMenu')[0].hidden = false;
-            $('#tipsMenu')[0].hidden = true;
-            $('#positonMenu')[0].hidden = true;
-            $('#numSelectMenu')[0].hidden = true;
-            $('#numberInputMenu').offset({
-                top: mySpan.offset().top,
-                left: mySpan.offset().left + mySpan.outerWidth(true)
-            });
-            $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
-            //inputerChange();
+        switch (getState()) {
+            case 'type':
+
+                return true;//不要屏蔽按键
+                break;
+            case 'numberInput':
+                return false;//不要屏蔽按键
+                break;
+            case 'tips':
+                return true;//不要屏蔽按键
+                break;
+            default:
+                mySpan = getCaretPos();
+                $('#inputmenu')[0].hidden = true;
+                $('#unitSelectMenu')[0].hidden = true;
+                $('#charSelectMenu')[0].hidden = true;
+                $('#numberInputMenu')[0].hidden = false;
+                $('#tipsMenu')[0].hidden = true;
+                $('#positonMenu')[0].hidden = true;
+                $('#numSelectMenu')[0].hidden = true;
+                $('#numberInputMenu').offset({
+                    top: mySpan.offset().top,
+                    left: mySpan.offset().left + mySpan.outerWidth(true)
+                });
+                $('#numberInputer').focus(); //setCaretPos0($('#inputer'));
+                //inputerChange();
+
+                return false;//不要屏蔽按键
+            //ajaxTerm();
         }
-        return false;//不要屏蔽按键
-        //ajaxTerm();
     } else {
         switch (event) {
             case 8:
@@ -1338,6 +1360,7 @@ function addspan() {
             $('#inputer').val('');
             inputerChange();
             autoBreakLine();
+            break;
         case 'numberInput':
             var addStr = $('#otherNum').find('.bg-Grey-100').children().eq(1).prop("outerHTML") + $('#otherNum').find('.bg-Grey-100').children().eq(2).prop("outerHTML");
 
@@ -1357,27 +1380,32 @@ function addspan() {
             $('#numberInputer').val('');
             numInputerChange();
             autoBreakLine();
-
+            break;
         case 'charSelect':
             var addStr = $('#charSelectMenu').find('.bg-Grey-100').html();
             var obj = $('#dk').find('.selectSpan');
-            if (obj.hasClass('newspan')) {
-                $(addStr).insertBefore(obj);
-                setCaretPos(obj);
-            } else {
+
                 $(addStr).insertAfter(obj);
-                if (obj.next().hasClass('endspan')) {
-                    setCaretPos(obj.next().next());
-                } else {
                     setCaretPos(obj.next());
-                }
-            }
-            $('#charSelectMenu').hidden = true;
+            obj.next().attr('pinyin', obj.attr('pinyin'));
+            obj.remove();
+            $('#charSelectMenu')[0].hidden = true;
             autoBreakLine();
+            break;
         case 'unitSelect':
+            var addStr = $('#unitSelectMenu').find('.bg-Grey-100').html();
+            var obj = $('#dk').find('.selectSpan');
+            $(addStr).insertAfter(obj);
+            setCaretPos(obj.next());
+            obj.next().attr('pinyin', obj.attr('pinyin'));
+            obj.remove();
+            $('#unitSelectMenu')[0].hidden = true;
+            autoBreakLine();
+            break;
         case 'tips':
         case 'positon':
         case 'numSelect':
+
     }
     //if (obj[0].tagName == "SPAN") {
     //    //判断span是不是逗号 是的话在下面一行preappend

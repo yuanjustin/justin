@@ -190,16 +190,19 @@
                         </ul>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <ul style="float:top;" page=0 class="menu">
+
+                        </ul>
+                    </td>
+                </tr>
             </table>
         </div>
 
-        <div id='unitSelectMenu' style="left: 50%;top: 50%;position: absolute;" hide>
-            <div style="float:top;">
-                <ul style="width: 10%" page=0 class="menu" id="mainSelectUnit">
+        <div id='unitSelectMenu' style="width: 100px;position: absolute;" hidden>
+            <ul style="height:200px;overflow-y:scroll;width: 100px" page=0 class="menu" id="mainSelectUnit">
                 </ul>
-                <ul style="width: 10%" page=0 class="menu" id="otherSelectUnit">
-                </ul>
-            </div>
         </div>
 
 
@@ -213,7 +216,8 @@
             <input type="range" class="slider"/>
         </div>
 
-        <div id='numSelectMenu' style="position: absolute;
+        <div id='numSelectMenu'
+             style="position: absolute;
         -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);">
@@ -221,6 +225,7 @@
                    onpropertychange="numSelecterChange();"
                     />
         </div>
+        <!--onmouseout="document.getElementById('numSelectMenu').hidden=true;-->
 
         <div style="width:96%;margin-left:auto; margin-right:auto;"> 个人信息</div>
         <div class="card" contenteditable="true" id="gr" z=3>

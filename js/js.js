@@ -35,6 +35,29 @@ function onload() {
     window.termAjax = new Array();
     window.baiduAjax = new Array();
     SideMenu.hide(document.querySelector('#leftMenu'));
+
+    $('#inputmenu').click(function (e) {
+        $('.bg-Grey-100').removeClass('bg-Grey-100');
+        if (e.target.tagName == "SPAN") {
+            $(e.target).parent().addClass('bg-Grey-100');
+            addspan();
+
+        }        //alert(e.target.innerHTML)
+        //$(this).addClass('lll');
+    });
+    $('#charSelectMenu').click(function (e) {
+        $('.bg-Grey-100').removeClass('bg-Grey-100');
+        if (e.target.tagName == "SPAN") {
+            $(e.target).parent().addClass('bg-Grey-100');
+            addspan();
+
+        }
+
+        //alert(e.target.innerHTML)
+        //$(this).addClass('lll');
+    });
+
+
     //加入左菜单鼠标事件
     $('#leftMenu').hover(function () {
         SideMenu.show(document.querySelector('#leftMenu'));
@@ -66,10 +89,10 @@ function onload() {
             $('#selectTerm').html('');
             for (var i = 0; i <= 4; i++) {
                 if (i <= baiduAjax.length - 1) {
-                    $('#selectBaidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</li>');
+                    $('#selectBaidu').append('<li ripple style=" float:left;"><span class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</span></li>');
                 }
                 if (i <= termAjax.length - 1) {
-                    $('#selectTerm').append('<li style=" float:left;"' + 'class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</li>');
+                    $('#selectTerm').append('<li ripple style=" float:left;"><span class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</span></li>');
                 }
             }
         }
@@ -83,10 +106,10 @@ function onload() {
             $('#selectTerm').html('');
             for (var i = 0; i <= 4; i++) {
                 if (i <= baiduAjax.length - 1) {
-                    $('#selectBaidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</li>');
+                    $('#selectBaidu').append('<li ripple style=" float:left;" ><span class=' + baiduAjax[page * 5 + i].class + '>' + baiduAjax[page * 5 + i].value + '</span></li>');
                 }
                 if (i <= termAjax.length - 1) {
-                    $('#selectTerm').append('<li style=" float:left;"' + 'class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</li>');
+                    $('#selectTerm').append('<li ripple style=" float:left;"><span class=' + termAjax[page * 5 + i].class + '>' + termAjax[page * 5 + i].value + '</span></li>');
                 }
             }
         }
@@ -268,6 +291,12 @@ function TypeKeyPress(event) {
         switch (event) {
             case 8:
                 return false;//不要屏蔽退格键
+            case 13:
+                addspan();
+                return true;//不要屏蔽退格键
+            case 32:
+                addspan();
+                return true;//不要屏蔽退格键
             case 40://向下
                 //判断是不是最后一个
                 switch (getState()) {
@@ -279,12 +308,20 @@ function TypeKeyPress(event) {
                                 //$('#baidu').children(':first').addClass('bg-Grey-100');
                             } else if (selectmenu.parent()[0].id == 'baidu') {
                                 selectmenu.removeClass('bg-Grey-100');
-                                $('#term').children(':first').addClass('bg-Grey-100');
+                                if (selectmenu.index() <= $('#term').children().length - 1) {
+                                    $('#term').children().eq(selectmenu.index()).addClass('bg-Grey-100');
+                                } else {
+                                    $('#term').children(':last').addClass('bg-Grey-100');
+                                }
                             }
                             return true;
                         } else {
                             selectmenu.removeClass('bg-Grey-100');
-                            $('#baidu').children(':first').addClass('bg-Grey-100');
+                            if (selectmenu.index() <= $('#baidu').children().length - 1) {
+                                $('#baidu').children().eq(selectmenu.index()).addClass('bg-Grey-100');
+                            } else {
+                                $('#baidu').children(':last').addClass('bg-Grey-100');
+                            }
                             return true;
                         }
                     case 'numberInput':
@@ -302,7 +339,7 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = 0; i <= 4; i++) {
                                 if (i <= j.length - 1) {
-                                    $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
                                 }
                             }
                             $('#otherNum').children(':first').addClass('bg-Grey-100');
@@ -318,10 +355,10 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i <= unit.length - 1) {
-                                        $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                        $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                     }
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                     }
                                 }
                                 $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -333,49 +370,6 @@ function TypeKeyPress(event) {
                         return true;
                     case 'charSelect':
                     case 'unitSelect':
-                        var selectmenu = $('#mainSelectUnit').find('.bg-Grey-100');
-                        //if(selectmenu[0].tagName=='INPUT'){
-                        //    selectmenu.removeClass('bg-Grey-100');
-                        //    $('#term').children(':first').addClass('bg-Grey-100');
-                        //    return false;
-                        //}else{
-                        if (isLastChild(selectmenu) == false) {
-                            selectmenu.removeClass('bg-Grey-100');
-                            selectmenu.next().addClass('bg-Grey-100');
-                            var page = $('#mainSelectUnit').attr('page');
-                            var j = unit[page * 5 + (selectmenu.index() + 1)];
-                            $('#otherSelectUnit').html('');
-                            for (var i = 0; i <= 4; i++) {
-                                if (i <= j.length - 1) {
-                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
-                                }
-                            }
-                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-
-                        }
-                        else {//换页下一页
-                            var page = $('#mainSelectUnit').attr('page');
-                            page++;
-                            if (page * 5 < unit.length) {
-                                $('#mainSelectUnit').attr('page', page);
-                                $('#mainSelectUnit').html('');
-                                $('#otherSelectUnit').attr('page', 0);
-                                $('#otherSelectUnit').html('');
-                                for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                    if (i <= unit.length - 1) {
-                                        $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
-                                    }
-                                    if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
-                                    }
-                                }
-                                $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                                $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
-                            }
-                        }
-                        return true;
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
@@ -394,7 +388,11 @@ function TypeKeyPress(event) {
                             }
                             else {
                                 selectmenu.removeClass('bg-Grey-100');
-                                $('#baidu').children(':first').addClass('bg-Grey-100');
+                                if (selectmenu.index() <= $('#baidu').children().length - 1) {
+                                    $('#baidu').children().eq(selectmenu.index()).addClass('bg-Grey-100');
+                                } else {
+                                    $('#baidu').children(':last').addClass('bg-Grey-100');
+                                }
                             }
                             return true;
                         } else {
@@ -411,7 +409,7 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = 0; i <= 4; i++) {
                                 if (i <= j.length - 1) {
-                                    $('#otherNum').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
                                 }
                             }
                             $('#otherNum').children(':first').addClass('bg-Grey-100');
@@ -425,10 +423,10 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i <= unit.length - 1) {
-                                        $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                        $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                     }
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                     }
                                 }
                                 $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -443,42 +441,7 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
-                        var selectmenu = $('#mainSelectUnit').find('.bg-Grey-100');
-                        if (isFirstChild(selectmenu) == false) {
-                            selectmenu.removeClass('bg-Grey-100');
-                            selectmenu.prev().addClass('bg-Grey-100');
-                            var page = $('#mainSelectUnit').attr('page');
-                            var j = unit[page * 5 + (selectmenu.index() - 1)];
-                            $('#otherSelectUnit').html('');
-                            for (var i = 0; i <= 4; i++) {
-                                if (i <= j.length - 1) {
-                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
-                                }
-                            }
-                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                        } else {//上一页
-                            var page = $('#mainSelectUnit').attr('page');
-                            if (page > 0) {
-                                page--;
-                                $('#mainSelectUnit').attr('page', page);
-                                $('#mainSelectUnit').html('');
-                                $('#otherSelectUnit').attr('page', 0);
-                                $('#otherSelectUnit').html('');
-                                for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                    if (i <= unit.length - 1) {
-                                        $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
-                                    }
-                                    if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
-                                    }
-                                }
-                                $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                                $('#mainSelectUnit').children(':last').addClass('bg-Grey-100');
-                            }
-                        }
-                        return true;
+
                 }
 
             case 37://向左
@@ -499,7 +462,7 @@ function TypeKeyPress(event) {
                                     selectmenu.html('');
                                     for (var i = 0; i <= 4; i++) {
                                         //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                        selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                        selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
                                     }
                                     selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
                                     selectmenu.children(':first').addClass('bg-Grey-100');
@@ -523,7 +486,7 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
                                     }
                                 }
                                 $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -536,27 +499,7 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
-                        var selectmenu = $('#otherSelectUnit').find('.bg-Grey-100');
-                        if (isFirstChild(selectmenu) == false) {
-                            selectmenu.removeClass('bg-Grey-100');
-                            selectmenu.prev().addClass('bg-Grey-100');
-                        } else {
-                            var page = $('#otherSelectUnit').attr('page');
-                            var mainIndex = $('#mainSelectUnit').find('.bg-Grey-100').index() + $('#mainSelectUnit').attr('page') * 5;
-                            if (page > 0) {
-                                page--;
-                                $('#otherSelectUnit').attr('page', page);
-                                $('#otherSelectUnit').html('');
-                                for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                    if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
-                                    }
-                                }
-                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children(':last').addClass('bg-Grey-100');
-                            }
-                        }
-                        return true;
+
                 }
 
             case 39://向右
@@ -582,12 +525,12 @@ function TypeKeyPress(event) {
                                     if ((page + 1) * 5 <= term.length) {
                                         for (var i = 0; i <= 4; i++) {
                                             //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                            selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                            selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
                                         }
                                     } else {
                                         for (var i = 0; i <= term.length - page * 5 - 1; i++) {
                                             //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                            selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                            selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
                                         }
                                     }
                                     selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -612,7 +555,7 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
                                     }
                                 }
                                 $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -625,28 +568,7 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
-                        var selectmenu = $('#otherSelectUnit').find('.bg-Grey-100');
-                        if (isLastChild(selectmenu) == false) {
-                            selectmenu.removeClass('bg-Grey-100');
-                            selectmenu.next().addClass('bg-Grey-100');
-                        }
-                        else {//otherSelectUnit 下一页
-                            var page = $('#otherSelectUnit').attr('page');
-                            var mainIndex = $('#mainSelectUnit').find('.bg-Grey-100').index() + $('#mainSelectUnit').attr('page') * 5;
-                            page++;
-                            if (page * 5 < unit[mainIndex].length) {
-                                $('#otherSelectUnit').attr('page', page);
-                                $('#otherSelectUnit').html('');
-                                for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                    if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
-                                    }
-                                }
-                                $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                                $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                            }
-                        }
-                        return true;
+
                 }
 
 
@@ -654,6 +576,9 @@ function TypeKeyPress(event) {
                 switch (getState()) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                        //if(selectmenu[0].tagName='INPUT'){
+                        //    selectmenu=$('#baidu');
+                        //}
                         var page = selectmenu.attr('page');
                         if (page > 0) {
                             page--;
@@ -662,7 +587,7 @@ function TypeKeyPress(event) {
                             selectmenu.html('');
                             for (var i = 0; i <= 4; i++) {
                                 //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
                             }
                             selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
                             selectmenu.children(':first').addClass('bg-Grey-100');
@@ -677,10 +602,10 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = page * 5; i <= page * 5 + 4; i++) {
                                 if (i <= unit.length - 1) {
-                                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                 }
                                 if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                 }
                             }
                             $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -694,27 +619,7 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
-                        var page = $('#mainSelectUnit').attr('page');
-                        if (page > 0) {
-                            page--;
-                            $('#mainSelectUnit').attr('page', page);
-                            $('#mainSelectUnit').html('');
-                            $('#otherSelectUnit').attr('page', 0);
-                            $('#otherSelectUnit').html('');
-                            for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                if (i <= unit.length - 1) {
-                                    $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
-                                }
-                                if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
-                                }
-                            }
-                            $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                            $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                            $('#mainSelectUnit').children(':last').addClass('bg-Grey-100');
-                        }
-                        return true;
+
                 }
 
 
@@ -722,6 +627,9 @@ function TypeKeyPress(event) {
                 switch (getState()) {
                     case 'type':
                         var selectmenu = $('#inputmenu').find('.bg-Grey-100').parent();
+                        //if(selectmenu[0].tagName='INPUT'){
+                        //    selectmenu=$('#baidu');
+                        //}
                         var page = selectmenu.attr('page');
                         var term = selectmenu[0].id == 'baidu' ? baiduAjax : termAjax;
                         page++;
@@ -731,12 +639,13 @@ function TypeKeyPress(event) {
                             if ((page + 1) * 5 <= term.length) {
                                 for (var i = 0; i <= 4; i++) {
                                     //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                    selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                    selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
                                 }
                             } else {
                                 for (var i = 0; i <= term.length - page * 5 - 1; i++) {
                                     //selectmenu .children().eq(i).text(term[page*5+i].value);
-                                    selectmenu.append('<li style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
+                                    selectmenu.append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</span></li>');
+                                    //selectmenu.append('<li ripple style=" float:left;"' + 'class=' + term[page * 5 + i].class + '>' + term[page * 5 + i].value + '</li>');
                                 }
                             }
                             selectmenu.children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -752,10 +661,10 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = page * 5; i <= page * 5 + 4; i++) {
                                 if (i <= unit.length - 1) {
-                                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                 }
                                 if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherNum').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                 }
                             }
                             $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -772,30 +681,11 @@ function TypeKeyPress(event) {
                     case 'tips':
                     case 'positon':
                     case 'numSelect':
-                        var page = $('#mainSelectUnit').attr('page');
-                        page++;
-                        if (page * 5 < unit.length) {
-                            $('#mainSelectUnit').attr('page', page);
-                            $('#mainSelectUnit').html('');
-                            $('#otherSelectUnit').attr('page', 0);
-                            $('#otherSelectUnit').html('');
-                            for (var i = page * 5; i <= page * 5 + 4; i++) {
-                                if (i <= unit.length - 1) {
-                                    $('#mainSelectUnit').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
-                                }
-                                if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherSelectUnit').append('<li>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
-                                }
-                            }
-                            $('#mainSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                            $('#otherSelectUnit').children('.bg-Grey-100').removeClass('bg-Grey-100');
-                            $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
-                            $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
-                            return true;
+
                             //nextpage
                             //判断还有没有下一页
                             //有的话显示并且选择第一项目
-                        }
+
                 }
 
         }
@@ -860,7 +750,7 @@ function clickSpan() {
             $('#numSelectMenu')[0].hidden = false;
             var objto = getCaretPos();
             $('#numSelecter').attr('max', Number(objto.text()) * 2);
-            $('#numSelecter').attr('min', 0);
+            $('#numSelecter').attr('min', Number(objto.text()) / 2);
             $('#numSelecter').attr('defaultValue', Number(objto.text()));
             $('#numSelecter').attr('card', objto.parent().parent().index());
             $('#numSelecter').attr('code', objto.parent().index());
@@ -887,14 +777,19 @@ function clickSpan() {
                     $('#otherSelectUnit').attr('page', 0);
                     $('#mainSelectUnit').html('');
                     $('#otherSelectUnit').html('');
-                    for (var i = 0; i <= 4; i++) {
-                        if (i <= unit.length - 1) {
-                            $('#mainSelectUnit').append('<li> <span class="unit">' + unit[i][0].unit + '</span></li>');
-                        }
-                        if (i <= unit[0].length - 1) {
-                            $('#otherSelectUnit').append('<li><span class="unit">' + unit[0][i].unit + '</span></li>');
-                        }
-                    }
+                    $.each(unit, function (i, item) {
+                        $.each(item, function (i, item) {
+                            $('#mainSelectUnit').append('<li ripple> <span class="unit">' + item.unit + '</span></li>');
+                        });
+                    });
+                    //for (var i = 0; i <= 4; i++) {
+                    //    if (i <= unit.length - 1) {
+                    //        $('#mainSelectUnit').append('<li ripple> <span class="unit">' + unit[i][0].unit + '</span></li>');
+                    //    }
+                    //    if (i <= unit[0].length - 1) {
+                    //        $('#otherSelectUnit').append('<li ripple><span class="unit">' + unit[0][i].unit + '</span></li>');
+                    //    }
+                    //}
                     $('#mainSelectUnit').children(':first').addClass('bg-Grey-100');
                     $('#otherSelectUnit').children(':first').addClass('bg-Grey-100');
                 }
@@ -918,8 +813,8 @@ function clickSpan() {
                     $('#selectBaidu').html('');
                     $('#selectTerm').html('');
                     for (var i = 0; i <= 4; i++) {
-                        $('#selectBaidu').append('<li style="float:left;"' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</li>');
-                        $('#selectTerm').append('<li style="float:left;"' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '</li>');
+                        $('#selectBaidu').append('<li ripple style="float:left;"><span class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</span></li>');
+                        $('#selectTerm').append('<li ripple style="float:left;" ><span class=' + termAjax[i].class + '>' + termAjax[i].value + '</span></li>');
                     }
                 }
             );
@@ -976,7 +871,7 @@ function munuchange(id) {
     $("#" + id).removeClass("bg-Grey-100");
     switch (id) {
         case "m1":
-            $('#my-menu-right').html('<ul class="menu"> <li ripple><a href="#">Open file</a></li> <li class="divider"></li> <li ripple><a href="#">Reload file</a></li></ul>');
+            $('#my-menu-right').html('<ul class="menu"> <li ripple ripple><a href="#">Open file</a></li> <li ripple class="divider"></li> <li ripple ripple><a href="#">Reload file</a></li></ul>');
             break;
         case "m2":
             $('#my-menu-right').html("1112");
@@ -1416,32 +1311,98 @@ function removeSpan(obj) {
     autoBreakLine();
 }
 
-function addspan(obj, s, classname, py) {
+function addspan() {
     //拼音用于重新选择 类名看是不是地址还是症状
-    if (obj[0].tagName == "SPAN") {
-        //判断span是不是逗号 是的话在下面一行preappend
-        // 不是的话计算出同胞位置 从后面inserafter
-        //alert(("<span  class='"+classname+"'>"+s+("</span>")));
-        if (obj.hasClass('newspan')) {
-            $("<span  class='" + classname + "'>" + s + ("</span>")).insertBefore(obj);
-            setCaretPos(getCaretPos().prev());
-        } else {
-            $("<span  class='" + classname + "'>" + s + ("</span>")).insertAfter(obj);
-            if (obj.next().hasClass('endspan')) {
-                setCaretPos(obj.next().next());
+    switch (getState()) {
+        case 'type':
+            $('#inputmenu').find('.bg-Grey-100').children().attr('pinyin', $('#inputer').val());
+            var addStr;
+            if ($('#inputmenu').find('.bg-Grey-100')[0].tagName != 'INPUT') {
+                addStr = $('#inputmenu').find('.bg-Grey-100').children().eq(1).prop("outerHTML");
             } else {
-                setCaretPos(obj.next());
+                addStr = $('#baidu').children(':first').children().eq(1).prop("outerHTML");
             }
-        }
-        autoBreakLine();
+            var obj = $('#dk').find('.selectSpan');
+
+            if (obj.hasClass('newspan')) {
+                $(addStr).insertBefore(obj);
+                setCaretPos(obj);
+            } else {
+                $(addStr).insertAfter(obj);
+                if (obj.next().hasClass('endspan')) {
+                    setCaretPos(obj.next().next());
+                } else {
+                    setCaretPos(obj.next());
+                }
+            }
+            $('#inputer').val('');
+            inputerChange();
+            autoBreakLine();
+        case 'numberInput':
+            var addStr = $('#otherNum').find('.bg-Grey-100').children().eq(1).prop("outerHTML") + $('#otherNum').find('.bg-Grey-100').children().eq(2).prop("outerHTML");
+
+            var obj = $('#dk').find('.selectSpan');
+
+            if (obj.hasClass('newspan')) {
+                $(addStr).insertBefore(obj);
+                setCaretPos(obj);
+            } else {
+                $(addStr).insertAfter(obj);
+                if (obj.next().hasClass('endspan')) {
+                    setCaretPos(obj.next().next());
+                } else {
+                    setCaretPos(obj.next());
+                }
+            }
+            $('#numberInputer').val('');
+            numInputerChange();
+            autoBreakLine();
+
+        case 'charSelect':
+            var addStr = $('#charSelectMenu').find('.bg-Grey-100').html();
+            var obj = $('#dk').find('.selectSpan');
+            if (obj.hasClass('newspan')) {
+                $(addStr).insertBefore(obj);
+                setCaretPos(obj);
+            } else {
+                $(addStr).insertAfter(obj);
+                if (obj.next().hasClass('endspan')) {
+                    setCaretPos(obj.next().next());
+                } else {
+                    setCaretPos(obj.next());
+                }
+            }
+            $('#charSelectMenu').hidden = true;
+            autoBreakLine();
+        case 'unitSelect':
+        case 'tips':
+        case 'positon':
+        case 'numSelect':
     }
+    //if (obj[0].tagName == "SPAN") {
+    //    //判断span是不是逗号 是的话在下面一行preappend
+    //    // 不是的话计算出同胞位置 从后面inserafter
+    //    //alert(("<span  class='"+classname+"'>"+s+("</span>")));
+    //    if (obj.hasClass('newspan')) {
+    //        $("<span  class='" + classname + "'>" + s + ("</span>")).insertBefore(obj);
+    //        setCaretPos(getCaretPos().prev());
+    //    } else {
+    //        $("<span  class='" + classname + "'>" + s + ("</span>")).insertAfter(obj);
+    //        if (obj.next().hasClass('endspan')) {
+    //            setCaretPos(obj.next().next());
+    //        } else {
+    //            setCaretPos(obj.next());
+    //        }
+    //    }
+    //    autoBreakLine();
+    //}
     /*else if(obj[0].tagName=="DIV"){
      //getCaretNum 后面有没有code 有的话算出下一个code preappend
      //没有的话上一个code append
      }*/
-    else {
-        console.log("addspan")
-    }
+    //else {
+    //    console.log("addspan")
+    //}
 
 }
 
@@ -1510,10 +1471,10 @@ function numInputerChange() {
             $('#otherNum').html('');
             for (var i = 0; i <= 4; i++) {
                 if (i <= unit.length - 1) {
-                    $('#mainNum').append('<li>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                 }
                 if (i <= unit[0].length - 1) {
-                    $('#otherNum').append('<li>' + '<span class=number>' + unit[0][i].value + '</span><span class="unit">' + unit[0][i].unit + '</span></li>');
+                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[0][i].value + '</span><span class="unit">' + unit[0][i].unit + '</span></li>');
                 }
             }
             $('#mainNum').children(':first').addClass('bg-Grey-100');
@@ -1544,8 +1505,8 @@ function inputerChange() {
             $('#baidu').html('');
             $('#term').html('');
             for (var i = 0; i <= 4; i++) {
-                $('#baidu').append('<li style=" float:left;"' + 'class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '  </li>');
-                $('#term').append('<li style="float:left"' + 'class=' + termAjax[i].class + '>' + termAjax[i].value + '  </li>');
+                $('#baidu').append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</span></li>');
+                $('#term').append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + termAjax[i].class + '>' + termAjax[i].value + '</span></li>');
             }
 
         }

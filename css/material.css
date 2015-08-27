@@ -124,34 +124,29 @@ code {
 	color: green;
 	word-wrap:break-word;
 	word-break:break-all;
-	float: left;
 }
 
 .symptom{
 	color:red;
 	word-wrap:break-word;
 	word-break:break-all;
-	float: left;
 }
 
 .time{
 	color: blue;
 	word-wrap:break-word;
 	word-break:break-all;
-	float: left;
 }
 
 .endspan{
 	color: black;
 	word-wrap:break-word;
 	word-break:break-all;
-	float: left;
 }
 .newspan{
 	color: lightgray;
 	word-wrap:break-word;
 	word-break:break-all;
-	float: left;
 }
 
 span{
@@ -1111,13 +1106,22 @@ code {
 	background-color: #444;
 	color: rgba(255, 255, 255, 0.87);
 }
+
+#inputmenu li {
+	width: auto;
+	margin: 4px;
+}
+
+#charSelectMenu li {
+	width: auto;
+	margin: 4px;
+}
 .menu li {
 	height: 2em;
 	line-height: 2em;
-	/*width: 100%;*/
+	width: 100%;
 	box-sizing: border-box;
-	margin: 4px;
-	/*todo*/
+	/*margin: 4px;*/
 }
 .menu li > a {
 	display: block;

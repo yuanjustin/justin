@@ -37,8 +37,8 @@ function onload() {
     SideMenu.hide(document.querySelector('#leftMenu'));
 
     $('#inputmenu').click(function (e) {
-        $('.bg-Grey-100').removeClass('bg-Grey-100');
         if (e.target.tagName == "SPAN") {
+            $('.bg-Grey-100').removeClass('bg-Grey-100');
             $(e.target).parent().addClass('bg-Grey-100');
             addspan();
 
@@ -46,8 +46,9 @@ function onload() {
         //$(this).addClass('lll');
     });
     $('#charSelectMenu').click(function (e) {
-        $('.bg-Grey-100').removeClass('bg-Grey-100');
+
         if (e.target.tagName == "SPAN") {
+            $('.bg-Grey-100').removeClass('bg-Grey-100');
             $(e.target).parent().addClass('bg-Grey-100');
             addspan();
 
@@ -58,8 +59,9 @@ function onload() {
     });
 
     $('#unitSelectMenu').click(function (e) {
-        $('.bg-Grey-100').removeClass('bg-Grey-100');
+
         if ($(e.target).children()[0].tagName == "SPAN") {
+            $('.bg-Grey-100').removeClass('bg-Grey-100');
             $(e.target).addClass('bg-Grey-100');
             addspan();
         }
@@ -67,6 +69,7 @@ function onload() {
         //alert(e.target.innerHTML)
         //$(this).addClass('lll');
     });
+
 
     //加入左菜单鼠标事件
     $('#leftMenu').hover(function () {
@@ -281,13 +284,26 @@ function TypeKeyPress(event) {
     } else if (event >= 48 && event <= 57) {
         switch (getState()) {
             case 'type':
-
+                if (event == 48 || event >= 54) {
+                    return true;
+                }
+                ;
+                var selectmenu = $('#inputmenu').find('.bg-Grey-100');
+                if (selectmenu[0].tagName == 'INPUT') {
+                    selectmenu = $('#baidu').children(':first')
+                }
+                if (event - 48 <= selectmenu.parent().children().length - 1) {
+                    selectmenu.removeClass('bg-Grey-100');
+                    selectmenu.parent().children().eq(event - 48 - 1).addClass('bg-Grey-100');
+                    addspan();
+                }
                 return true;//不要屏蔽按键
                 break;
             case 'numberInput':
                 return false;//不要屏蔽按键
                 break;
             case 'tips':
+
                 return true;//不要屏蔽按键
                 break;
             default:

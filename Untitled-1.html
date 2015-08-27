@@ -127,8 +127,9 @@
     </ul>
 
     <div class="main-content" id="dk">
-        <input name="123" type="button" onclick="$('#inputmenu').attr('lll',document.getElementById('numberInputMenu'));
-    alert($('#inputmenu').attr('lll').id);"/>
+        <input name="123" type="button" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');
+        $('#inputer').addClass('bg-Grey-100');
+  "/>
         <input type="text" name="fname"/>
 
         <div id='inputmenu' style="left: 50%;top: 50%;position: absolute;" hidden>
@@ -136,9 +137,9 @@
                    class="text-input bg-Grey-100"
                    oninput="inputerChange();this.size=(this.value.length>4?this.value.length:4);"
                    onpropertychange="inputerChange();this.size=(this.value.length>4?this.value.length:4);"
-                   onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');$(this).addClass('bg-Grey-100')"
-                   size="4">
-
+                   onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');
+        $('#inputer').addClass('bg-Grey-100');
+  " size="4">
             <div style="float:top;">
                 <table>
                     <tr>

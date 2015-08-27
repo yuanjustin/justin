@@ -1,6 +1,7 @@
 /******** Material framework ********/
 /******** by Tim Nguyen *************/
 /** http://twitter.com/therealntim **/
+
 .inforcards
 {
 	width:96%;
@@ -3252,7 +3253,10 @@ code {
 .fill-grey-50 { fill: #fafafa; }
 .stroke-grey-50 { stroke: #fafafa; }
 .color-grey-100 { color: #f5f5f5; }
-.bg-grey-100 { background-color: #f5f5f5; }
+
+.bg-grey-100 {
+	background-color: #f5f5f5;
+}
 .border-grey-100 { border-color: #f5f5f5; }
 .fill-grey-100 { fill: #f5f5f5; }
 .stroke-grey-100 { stroke: #f5f5f5; }

@@ -127,8 +127,7 @@
     </ul>
 
     <div class="main-content" id="dk">
-        <input name="123" type="button" onclick="$('#inputmenu .bg-Grey-100').removeClass('bg-Grey-100');
-        $('#inputer').addClass('bg-Grey-100');
+        <input name="123" type="button" onclick="alert(document.getElementById('numSelectMenu').timeid);
   "/>
         <input type="text" name="fname"/>
 
@@ -208,23 +207,42 @@
 
 
         <div id='tipsMenu' style="left: 50%;top: 50%;position: absolute;">
-            <ul style="width: 10%" page=0 class="menu">
-                <li id="tips"></li>
+            <ul id="tips" style="width: 10%" page=0 class="menu">
+
             </ul>
         </div>
 
-        <div id='positonMenu' style="position: absolute;" hide>
-            <input type="range" class="slider"/>
+        <div id='positonMenu' style="position: absolute;" hidden>
+            <input id='positonMenuY' type="range" class="slider"
+                   style="position: absolute;
+        -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);"
+                   oninput="positionSelecterChangeY();"
+                   timeid=0 onpropertychange="positionSelecterChangeY();"
+                   onmouseover="clearTimeout(document.getElementById('positonMenu').timeid);"
+                   onmouseout="document.getElementById('positonMenu').timeid=setTimeout(function(){
+           document.getElementById('positonMenu').hidden=true;autoBreakLine();
+        },700);"/>
+            <input id='positonMenuX' type="range" class="slider" oninput="positionSelecterChangeX();"
+                   timeid=0 onpropertychange="positionSelecterChangeX();"
+                   onmouseover="clearTimeout(document.getElementById('positonMenu').timeid);"
+                   onmouseout="document.getElementById('positonMenu').timeid=setTimeout(function(){
+           document.getElementById('positonMenu').hidden=true;autoBreakLine();
+        },700);"/>
         </div>
 
         <div id='numSelectMenu'
              style="position: absolute;
         -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);">
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);" hidden>
             <input type="range" id="numSelecter" class="slider" oninput="numSelecterChange();"
-                   onpropertychange="numSelecterChange();"
-                    />
+                   timeid=0 onpropertychange="numSelecterChange();"
+                   onmouseover="clearTimeout(document.getElementById('numSelectMenu').timeid);"
+                   onmouseout="document.getElementById('numSelectMenu').timeid=setTimeout(function(){
+           document.getElementById('numSelectMenu').hidden=true;autoBreakLine();
+        },700);"/>
         </div>
         <!--onmouseout="document.getElementById('numSelectMenu').hidden=true;-->
 

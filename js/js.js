@@ -46,7 +46,6 @@ function onload() {
         //$(this).addClass('lll');
     });
     $('#charSelectMenu').click(function (e) {
-
         if (e.target.tagName == "SPAN") {
             $('.bg-Grey-100').removeClass('bg-Grey-100');
             $(e.target).parent().addClass('bg-Grey-100');
@@ -57,7 +56,15 @@ function onload() {
         //alert(e.target.innerHTML)
         //$(this).addClass('lll');
     });
-
+    $('#tipsMenu').click(function (e) {
+        if (e.target.tagName == "SPAN") {
+            $('.bg-Grey-100').removeClass('bg-Grey-100');
+            $(e.target).parent().addClass('bg-Grey-100');
+            addspan();
+        }
+        //alert(e.target.innerHTML)
+        //$(this).addClass('lll');
+    });
     $('#unitSelectMenu').click(function (e) {
 
         if ($(e.target).children()[0].tagName == "SPAN") {
@@ -132,7 +139,7 @@ function onload() {
         if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
             event.which = event.charCode || event.keyCode;
         }
-        if (getState() == 'type' || getState() == 'numberInput') {
+        if (getState() == 'type' || getState() == 'numberInput' || getState() == 'tips') {
             if (TypeKeyPress(event.which)) {//判断按键并且返回是否屏蔽
                 event.preventDefault();//屏蔽按键
             }
@@ -148,7 +155,7 @@ function onload() {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
-            if (getState() == 'type' || getState() == 'numberInput') {
+            if (getState() == 'type' || getState() == 'numberInput' || getState() == 'tips') {
                 if (TypeKeyPress(event.which)) {
                     return false;
                 }
@@ -208,6 +215,13 @@ function noTypeKeyPress(event) {
         }
         return false;//不要屏蔽按键
     } else {
+        $('#inputmenu')[0].hidden = true;
+        $('#unitSelectMenu')[0].hidden = true;
+        $('#charSelectMenu')[0].hidden = true;
+        $('#numberInputMenu')[0].hidden = true;
+        $('#tipsMenu')[0].hidden = true;
+        $('#positonMenu')[0].hidden = true;
+        $('#numSelectMenu')[0].hidden = true;
         switch (event) {
             case 8:
                 //alert($('#a1').children(":last").attr('id'));
@@ -377,7 +391,7 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = 0; i <= 4; i++) {
                                 if (i <= j.length - 1) {
-                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple><span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
                                 }
                             }
                             $('#otherNum').children(':first').addClass('bg-Grey-100');
@@ -393,10 +407,10 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i <= unit.length - 1) {
-                                        $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                        $('#mainNum').append('<li ripple><span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                     }
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple><span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                     }
                                 }
                                 $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -409,6 +423,12 @@ function TypeKeyPress(event) {
                     case 'charSelect':
                     case 'unitSelect':
                     case 'tips':
+                        var selectmenu = $('#tips').find('.bg-Grey-100');
+                        if (isLastChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.next().addClass('bg-Grey-100');
+                        }
+                        return true;
                     case 'positon':
                     case 'numSelect':
 
@@ -447,7 +467,7 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = 0; i <= 4; i++) {
                                 if (i <= j.length - 1) {
-                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple><span class=number>' + j[i].value + '</span><span class="unit">' + j[i].unit + '</span></li>');
                                 }
                             }
                             $('#otherNum').children(':first').addClass('bg-Grey-100');
@@ -461,10 +481,10 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i <= unit.length - 1) {
-                                        $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                        $('#mainNum').append('<li ripple><span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                     }
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple><span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                     }
                                 }
                                 $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -477,6 +497,12 @@ function TypeKeyPress(event) {
                     case 'charSelect':
                     case 'unitSelect':
                     case 'tips':
+                        var selectmenu = $('#tips').find('.bg-Grey-100');
+                        if (isFirstChild(selectmenu) == false) {
+                            selectmenu.removeClass('bg-Grey-100');
+                            selectmenu.prev().addClass('bg-Grey-100');
+                        }
+                        return true;
                     case 'positon':
                     case 'numSelect':
 
@@ -524,7 +550,7 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple><span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
                                     }
                                 }
                                 $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -593,7 +619,7 @@ function TypeKeyPress(event) {
                                 $('#otherNum').html('');
                                 for (var i = page * 5; i <= page * 5 + 4; i++) {
                                     if (i - page * 5 <= unit[page * 5].length - 1) {
-                                        $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
+                                        $('#otherNum').append('<li ripple><span class=number>' + unit[mainIndex][i].value + '</span><span class="unit">' + unit[mainIndex][i].unit + '</span></li>');
                                     }
                                 }
                                 $('#otherNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -640,10 +666,10 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = page * 5; i <= page * 5 + 4; i++) {
                                 if (i <= unit.length - 1) {
-                                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    $('#mainNum').append('<li ripple><span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                 }
                                 if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple><span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                 }
                             }
                             $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -699,10 +725,10 @@ function TypeKeyPress(event) {
                             $('#otherNum').html('');
                             for (var i = page * 5; i <= page * 5 + 4; i++) {
                                 if (i <= unit.length - 1) {
-                                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                                    $('#mainNum').append('<li ripple><span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                                 }
                                 if (i - page * 5 <= unit[page * 5].length - 1) {
-                                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
+                                    $('#otherNum').append('<li ripple><span class=number>' + unit[page * 5][i - page * 5].value + '</span><span class="unit">' + unit[page * 5][i - page * 5].unit + '</span></li>');
                                 }
                             }
                             $('#mainNum').children('.bg-Grey-100').removeClass('bg-Grey-100');
@@ -834,6 +860,24 @@ function clickSpan() {
             );
         } else if (obj.hasClass('position')) {
             $('#positonMenu')[0].hidden = false;
+            var objto = getCaretPos();
+            $('#positonMenuX').attr('max', 10);
+            $('#positonMenuX').attr('min', 1);
+            $('#positonMenuY').attr('max', 10);
+            $('#positonMenuY').attr('min', 1);
+            $('#positonMenu').attr('card', objto.parent().parent().index());
+            $('#positonMenu').attr('code', objto.parent().index());
+            $('#positonMenu').attr('span', objto.index());
+            $('#positonMenuY').offset({top: 0, left: 0});
+            $('#positonMenuX').offset({top: 0, left: 0});
+            $('#positonMenuY').offset({
+                top: objto.offset().top - $('#positonMenuY').outerWidth(false) / 2,
+                left: objto.offset().left + objto.outerWidth(true)
+            });
+            $('#positonMenuX').offset({
+                top: objto.offset().top + objto.innerHeight(),
+                left: objto.offset().left - $('#positonMenuX').outerWidth(true) / 2 + objto.innerWidth() / 2
+            });
         } else if (obj.hasClass('endspan') || obj.hasClass('newspan')) {
         } else {
             $('#charSelectMenu')[0].hidden = false;
@@ -1048,6 +1092,7 @@ function setCaretPos(obj) {
     s.removeAllRanges();
     s.addRange(r);
     selectChange();
+    //clickSpan();
 }
 function getCaretPos() {
     try {
@@ -1376,9 +1421,38 @@ function addspan() {
             $('#inputer').val('');
             inputerChange();
             autoBreakLine();
+            $.getJSON(
+                "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/tips.json",
+                {
+                    "order": "tips", "term": getCaretPos().text()
+                },
+                function (result) {
+                    //$(result.tips).insertAfter(getCaretPos());
+                    mySpan = getCaretPos();
+                    $('#inputmenu')[0].hidden = true;
+                    $('#unitSelectMenu')[0].hidden = true;
+                    $('#charSelectMenu')[0].hidden = true;
+                    $('#numberInputMenu')[0].hidden = true;
+                    $('#tipsMenu')[0].hidden = false;
+                    $('#positonMenu')[0].hidden = true;
+                    $('#numSelectMenu')[0].hidden = true;
+                    $('#tipsMenu').offset({
+                        top: mySpan.offset().top,
+                        left: mySpan.offset().left + mySpan.outerWidth(true)
+                    });
+                    $('#tips').html('');
+                    $.each(result.tips, function (i, item) {
+                        $('#tips').append('<li ripple position=' + result.position[i] + '> ' + item + '</li>');
+                    });
+                    $('#tips').children(':first').addClass('bg-Grey-100');
+                    //for(var j=1;j<=result.position;j++){
+                    //    setCaretPos(getCaretPos().next());
+                    //}
+                }
+            );
             break;
         case 'numberInput':
-            var addStr = $('#otherNum').find('.bg-Grey-100').children().eq(1).prop("outerHTML") + $('#otherNum').find('.bg-Grey-100').children().eq(2).prop("outerHTML");
+            var addStr = $('#otherNum').find('.bg-Grey-100').children().eq(0).prop("outerHTML") + $('#otherNum').find('.bg-Grey-100').children().eq(1).prop("outerHTML");
 
             var obj = $('#dk').find('.selectSpan');
 
@@ -1419,13 +1493,32 @@ function addspan() {
             autoBreakLine();
             break;
         case 'tips':
+            var addStr = $('#tips').find('.bg-Grey-100').html();
+            var obj = $('#dk').find('.selectSpan');
+            if (obj.hasClass('newspan')) {
+                $(addStr).insertBefore(obj);
+                setCaretPos(obj);
+            } else {
+                $(addStr).insertAfter(obj);
+                if (obj.next().hasClass('endspan')) {
+                    setCaretPos(obj.next().next());
+                } else {
+                    setCaretPos(obj.next());
+                }
+            }
+            for (var j = 1; j <= $('#tips').find('.bg-Grey-100').attr('position'); j++) {
+                setCaretPos(getCaretPos().next());
+            }
+            $('#tipsMenu')[0].hidden = true;
+            autoBreakLine();
+            break;
         case 'positon':
         case 'numSelect':
 
     }
     //if (obj[0].tagName == "SPAN") {
     //    //判断span是不是逗号 是的话在下面一行preappend
-    //    // 不是的话计算出同胞位置 从后面inserafter
+    //    // 不是的话计算出同胞位置 从后面inseraftera
     //    //alert(("<span  class='"+classname+"'>"+s+("</span>")));
     //    if (obj.hasClass('newspan')) {
     //        $("<span  class='" + classname + "'>" + s + ("</span>")).insertBefore(obj);
@@ -1515,10 +1608,10 @@ function numInputerChange() {
             $('#otherNum').html('');
             for (var i = 0; i <= 4; i++) {
                 if (i <= unit.length - 1) {
-                    $('#mainNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
+                    $('#mainNum').append('<li ripple><span class=number>' + unit[i][0].value + '</span><span class="unit">' + unit[i][0].unit + '</span></li>');
                 }
                 if (i <= unit[0].length - 1) {
-                    $('#otherNum').append('<li ripple>' + '<span>' + (i + 1) + '.</span>' + '<span class=number>' + unit[0][i].value + '</span><span class="unit">' + unit[0][i].unit + '</span></li>');
+                    $('#otherNum').append('<li ripple><span class=number>' + unit[0][i].value + '</span><span class="unit">' + unit[0][i].unit + '</span></li>');
                 }
             }
             $('#mainNum').children(':first').addClass('bg-Grey-100');
@@ -1566,5 +1659,50 @@ function setDivPosi(obj, objto) {
     obj.offset({top: objto.offset().top, left: objto.offset().left + objto.outerWidth(true)});
 }
 function numSelecterChange() {
-    $('#dk').children().eq($('#numSelecter').attr('card')).children().eq($('#numSelecter').attr('code')).children().eq($('#numSelecter').attr('span')).text($('#numSelecter').val())
+    $('#dk').children().eq($('#numSelecter').attr('card')).children().eq($('#numSelecter').attr('code')).children().eq($('#numSelecter').attr('span')).text($('#numSelecter').val());
+}
+function positionSelecterChangeX() {
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text($('#positonMenuX').attr('max') - $('#positonMenuX').val());
+    var dir1;
+    var dir2;
+    if ($('#positonMenuX').val() > $('#positonMenuX').attr('max') / 2) {
+        dir1 = '右';
+    } else if ($('#positonMenuX').val() < $('#positonMenuX').attr('max') / 2) {
+        dir1 = '左';
+    } else {
+        dir1 = '';
+    }
+
+    if ($('#positonMenuY').val() > $('#positonMenuY').attr('max') / 2) {
+        dir2 = '上';
+    } else if ($('#positonMenuY').val() < $('#positonMenuY').attr('max') / 2) {
+        dir2 = '下';
+    } else {
+        dir2 = '';
+    }
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().text(dir1 + dir2);
+
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().next().text('cm');
+}
+function positionSelecterChangeY() {
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text($('#positonMenuX').attr('max') - $('#positonMenuY').val());
+    var dir1;
+    var dir2;
+    if ($('#positonMenuX').val() > $('#positonMenuX').attr('max') / 2) {
+        dir1 = '右';
+    } else if ($('#positonMenuX').val() < $('#positonMenuX').attr('max') / 2) {
+        dir1 = '左';
+    } else {
+        dir1 = '';
+    }
+    if ($('#positonMenuY').val() > $('#positonMenuY').attr('max') / 2) {
+        dir2 = '上';
+    } else if ($('#positonMenuY').val() < $('#positonMenuY').attr('max') / 2) {
+        dir2 = '下';
+    } else {
+        dir2 = '';
+    }
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().text(dir1 + dir2);
+
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().next().text('cm');
 }

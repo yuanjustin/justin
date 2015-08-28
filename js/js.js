@@ -22,14 +22,6 @@
 //document.onselectionchange= (selectChange());
 function onload() {
     var md = new Material();
-    var word_list = [
-        {text: "ifxoxo.com", weight: 13},
-        {text: "520xmn.com", weight: 10.5},
-        {text: "jquery", weight: 9.4},
-        {text: "jqcloud", weight: 8},
-        {text: "ifxoxo1", weight: 6.2}
-    ];
-    $("#my_words").jQCloud(word_list);
 
     document.getElementById("leftMenu").addEventListener("transitionend", function () {
         autoBreakLine();
@@ -43,6 +35,9 @@ function onload() {
     window.unit = new Array();
     window.termAjax = new Array();
     window.baiduAjax = new Array();
+    window.disease = new Array();
+    window.danger = new Array();
+
     SideMenu.hide(document.querySelector('#leftMenu'));
     $('#dk').html($('#dk0').html());
     $('#tb').html($('#tb0').html());
@@ -125,6 +120,7 @@ function onload() {
      event.preventDefault();
      });*/
     $('#dk').find('.card').click(clickSpan);
+    $('#searcher').click(clickSpan);
     $('#selectPageUp').click(function () {
         var page = $('#selectBaidu').attr('page');
         if (page > 0) {
@@ -220,7 +216,17 @@ function noTypeKeyPress(event) {
             $('#tipsMenu')[0].hidden = true;
             $('#positonMenu')[0].hidden = true;
             $('#numSelectMenu')[0].hidden = true;
-            setDivPosi($('#inputmenu'), getCaretPos());
+            if ($('#searcher').is(":focus")) {//todo
+                //alert('');
+                $('#inputmenu').offset({top: 20, left: 0});
+                $('#inputer').val(String.fromCharCode(event));
+                $('#searcher').val('');
+                $('#inputer').focus(); //setCaretPos0($('#inputer'));
+                inputerChange();
+                return true;
+            } else {
+                setDivPosi($('#inputmenu'), getCaretPos());
+            }
             $('#inputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
@@ -314,7 +320,20 @@ function TypeKeyPress(event) {
             $('#tipsMenu')[0].hidden = true;
             $('#positonMenu')[0].hidden = true;
             $('#numSelectMenu')[0].hidden = true;
-            $('#inputmenu').offset({top: mySpan.offset().top, left: mySpan.offset().left + mySpan.outerWidth(true)});
+            if ($('#searcher').is(":focus")) {//todo
+                //alert('');
+                //$('#inputmenu').offset({top: 20 , right:160 });
+                $('#inputer').val(String.fromCharCode(event));
+                $('#searcher').val('');
+                $('#inputer').focus(); //setCaretPos0($('#inputer'));
+                inputerChange();
+                return true;
+            } else {
+                $('#inputmenu').offset({
+                    top: mySpan.offset().top,
+                    left: mySpan.offset().left + mySpan.outerWidth(true)
+                });
+            }
             $('#inputer').focus(); //setCaretPos0($('#inputer'));
             //inputerChange();
         }
@@ -1440,8 +1459,34 @@ function addspan() {
             } else {
                 addStr = $('#baidu').children(':first').children().eq(1).prop("outerHTML");
             }
-            var obj = $('#dk').find('.selectSpan');
+            //搜索专用
+            if ($('#inputmenu').offset().left == document.body.offsetWidth - $('#inputmenu').outerWidth(true) || $('#inputmenu').offset().left == 0) {
+                $('#searcher').val($(addStr).text());
+                $('#inputer').val('');
+                //alert( $(addStr).text());
+                inputerChange();
+                $.getJSON(
+                    "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/search.json",//路径你来决定
+                    {
+                        "order": "search", "keyword": $('#searcher').val()
+                    },
+                    function (result) {
+                        var word_list = [];
+                        $.each(result, function (i, item) {
+                            word_list[i] = {};
+                            word_list[i].text = item.disease;
+                            word_list[i].weight = item.factor;
+                            //$(word_list[i]).attr('text',item.disease);
+                            //$(word_list[i]).attr('weight',item.factor);
+                        });
+                        $("#searchWord").jQCloud(word_list);
+                    }
+                );
+                return;
+            }
 
+
+            var obj = $('#dk').find('.selectSpan');
             if (obj.hasClass('newspan')) {
                 $(addStr).insertBefore(obj);
                 setCaretPos(obj);
@@ -1486,6 +1531,45 @@ function addspan() {
                     //}
                 }
             );
+            //寻求可能性
+            var data = {};
+            data.order = 'searchdiseasebysymptom'
+            $('#dk .symptom').each(function (i, item) {
+                //alert(item.innerHTML);
+                $(data).attr("s" + i, item.innerHTML)
+            });
+            $.getJSON(
+                "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/disease.json",
+                data,
+                function (result) {
+                    disease = result[1];
+                    danger = result[0];
+                    var word_list = [];
+                    $.each(disease, function (i, item) {
+                        word_list[i] = {};
+                        word_list[i].text = item.disease;
+                        word_list[i].weight = item.factor.replace(/([0-9.]+)%/, function (a, b) {
+                                return +b / 100;
+                            }) * 10;
+                        //$(word_list[i]).attr('text',item.disease);
+                        //$(word_list[i]).attr('weight',item.factor);
+                    });
+                    $("#my_words").jQCloud(word_list);
+                    word_list = [];
+                    $.each(danger, function (i, item) {
+                        word_list[i] = {};
+                        word_list[i].text = item.disease;
+                        word_list[i].weight = item.factor;
+                        //$(word_list[i]).attr('text',item.disease);
+                        //$(word_list[i]).attr('weight',item.factor);
+                    });
+                    $("#dangerWord").jQCloud(word_list);
+
+                }
+            );
+
+
+
             break;
         case 'numberInput':
             var addStr = $('#otherNum').find('.bg-Grey-100').children().eq(0).prop("outerHTML") + $('#otherNum').find('.bg-Grey-100').children().eq(1).prop("outerHTML");
@@ -1533,6 +1617,7 @@ function addspan() {
             var obj = $('#dk').find('.selectSpan');
             if (obj.hasClass('newspan')) {
                 $(addStr).insertBefore(obj);
+                setCaretPos(obj);
                 //alert($(addStr).length);
                 for (var j = 1; j <= $(addStr).length-$('#tips').find('.bg-Grey-100').attr('position')+1; j++) {
                     setCaretPos(getCaretPos().prev());
@@ -1692,7 +1777,9 @@ function inputerChange() {
                 $('#baidu').append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + baiduAjax[i].class + '>' + baiduAjax[i].value + '</span></li>');
                 $('#term').append('<li ripple style=" float:left;">' + '<span>' + (i + 1) + '.</span>' + '<span class=' + termAjax[i].class + '>' + termAjax[i].value + '</span></li>');
             }
-
+            if ($('#inputmenu').offset().left == 0) {
+                $('#inputmenu').offset({top: 20, left: document.body.offsetWidth - $('#inputmenu').outerWidth(true)});
+            }
         }
     );
     //for(var i=0;i<=20;i++){

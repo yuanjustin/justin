@@ -22,6 +22,7 @@
 //document.onselectionchange= (selectChange());
 function onload() {
     var md = new Material();
+
     document.getElementById("leftMenu").addEventListener("transitionend", function () {
         autoBreakLine();
     });
@@ -35,6 +36,22 @@ function onload() {
     window.termAjax = new Array();
     window.baiduAjax = new Array();
     SideMenu.hide(document.querySelector('#leftMenu'));
+    $('#dk').html($('#dk0').html());
+    $('#tb').html($('#tb0').html());
+    $('#switchModel').text('切换到住院病历');
+    $('#switchModel').click(function () {
+        if($('#switchModel').text()=='切换到住院病历'){
+            $('#dk').html($('#dk1').html());
+            $('#tb').html($('#tb1').html());
+            $('#switchModel').text('切换到门诊病历');
+        }else{
+            $('#dk').html($('#dk0').html());
+            $('#tb').html($('#tb0').html());
+            $('#switchModel').text('切换到住院病历');
+        }
+        $('#dk').find('.card').click(clickSpan);
+
+    });
 
     $('#inputmenu').click(function (e) {
         if (e.target.tagName == "SPAN") {
@@ -89,9 +106,9 @@ function onload() {
     }, function () {
         menuhide();
     });
-    $('.my-menu-section').mouseenter(function () {
-        munuchange(this.id);
-    });
+    //$('.my-menu-section').mouseenter(function () {
+    //    munuchange(this.id);
+    //});
     //$('#inputmenu').attr('pinyin',$('#numberInputMenu'));
     //alert($('#inputmenu').attr('pinyin'));
 
@@ -99,7 +116,7 @@ function onload() {
     /* $(document).unbind('keydown').bind('keydown', function (event) {
      event.preventDefault();
      });*/
-    $('#dk').children('.card').click(clickSpan);
+    $('#dk').find('.card').click(clickSpan);
     $('#selectPageUp').click(function () {
         var page = $('#selectBaidu').attr('page');
         if (page > 0) {
@@ -135,7 +152,7 @@ function onload() {
         }
     });
 
-    $('#dk').keypress(function (event) {
+    $(document).keypress(function (event) {
         if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
             event.which = event.charCode || event.keyCode;
         }
@@ -151,7 +168,7 @@ function onload() {
 
     });
 
-    $('#dk').keydown(function (event) {
+    $(document).keydown(function (event) {
         if (event.which == 37 || event.which == 38 || event.which == 39
             || event.which == 40 || event.which == 8
             || event.which == 33 || event.which == 34) {
@@ -943,33 +960,33 @@ function menuhide() {
     }
 }
 
-function munuchange(id) {
-    for (var i = 1; i <= 5; i++) {
-        var id1 = "m" + i;
-        //alert("#"+id1);
-        $("#" + id1).removeClass("bg-Grey-100");
-        $("#" + id1).addClass("bg-Grey-100");
-    }
-    $("#" + id).removeClass("bg-Grey-100");
-    switch (id) {
-        case "m1":
-            $('#my-menu-right').html('<ul class="menu"> <li ripple ripple><a href="#">Open file</a></li> <li ripple class="divider"></li> <li ripple ripple><a href="#">Reload file</a></li></ul>');
-            break;
-        case "m2":
-            $('#my-menu-right').html("1112");
-            break;
-        case "m3":
-            $('#my-menu-right').html("1113");
-            break;
-        case "m4":
-            $('#my-menu-right').html("1114");
-            break;
-        case "m5":
-            $('#my-menu-right').html("1115");
-            break;
-
-    }
-}
+//function munuchange(id) {
+//    for (var i = 1; i <= 5; i++) {
+//        var id1 = "m" + i;
+//        //alert("#"+id1);
+//        $("#" + id1).removeClass("bg-Grey-100");
+//        $("#" + id1).addClass("bg-Grey-100");
+//    }
+//    $("#" + id).removeClass("bg-Grey-100");
+//    switch (id) {
+//        case "m1":
+//            $('#my-menu-right').html('<ul class="menu"> <li ripple ripple><a href="#">Open file</a></li> <li ripple class="divider"></li> <li ripple ripple><a href="#">Reload file</a></li></ul>');
+//            break;
+//        case "m2":
+//            $('#my-menu-right').html("1112");
+//            break;
+//        case "m3":
+//            $('#my-menu-right').html("1113");
+//            break;
+//        case "m4":
+//            $('#my-menu-right').html("1114");
+//            break;
+//        case "m5":
+//            $('#my-menu-right').html("1115");
+//            break;
+//
+//    }
+//}
 //function myselect(id){
 //    $('.myselect').removeClass('myselect');
 //    $('#'+id).addClass("myselect");
@@ -992,7 +1009,7 @@ function munuchange(id) {
 function autoBreakLine() {
     //alert(getCaretPos().parent().parent().find("span").length);
     var nowspan = getCaretPos();
-    var cards = $('#dk').children('.card');
+    var cards = $('#dk').find('.card');
     for (var j = 0; j <= cards.length - 1; j++) {
         var card = cards.eq(j);
         //alert(card[0].id);
@@ -1034,8 +1051,12 @@ function autoBreakLine() {
 
         }
     }
-    if (nowspan[0].tagName == "SPAN") {
-        setCaretPos(nowspan);
+    try{
+        if (nowspan[0].tagName == "SPAN") {
+            setCaretPos(nowspan);
+        }
+    }catch (error) {
+        return;
     }
 }
 
@@ -1080,19 +1101,25 @@ function setCaretPos0(obj) {
     selectChange();
 }
 function setCaretPos(obj) {
-    var s = window.getSelection();
-    var r = s.getRangeAt(0);
+    try{
+        var s = window.getSelection();
+        var r = s.getRangeAt(0);
 //if( dir=='forward'){
 //    r.setStartAfter(obj[0], 0);
 //    r.setEndBefore(obj[0], 0);
 //}else{
-    r.setStart(obj[0].childNodes[0], 1);
-    r.setEnd(obj[0].childNodes[0], 1);
+        r.setStart(obj[0].childNodes[0], 1);
+        r.setEnd(obj[0].childNodes[0], 1);
 //}
-    s.removeAllRanges();
-    s.addRange(r);
-    selectChange();
-    //clickSpan();
+        s.removeAllRanges();
+        s.addRange(r);
+        selectChange();
+        //clickSpan();
+    }catch (error) {
+        //alert('');
+    return;
+}
+
 }
 function getCaretPos() {
     try {
@@ -1419,12 +1446,13 @@ function addspan() {
                 }
             }
             $('#inputer').val('');
+            //alert( $(addStr).text());
             inputerChange();
             autoBreakLine();
             $.getJSON(
                 "http://localhost:63342/%E7%94%B5%E5%AD%90%E7%97%85%E5%8E%86/json/tips.json",
                 {
-                    "order": "tips", "term": getCaretPos().text()
+                    "order": "tips", "term": $(addStr).text()
                 },
                 function (result) {
                     //$(result.tips).insertAfter(getCaretPos());
@@ -1497,17 +1525,28 @@ function addspan() {
             var obj = $('#dk').find('.selectSpan');
             if (obj.hasClass('newspan')) {
                 $(addStr).insertBefore(obj);
-                setCaretPos(obj);
+                //alert($(addStr).length);
+                for (var j = 1; j <= $(addStr).length-$('#tips').find('.bg-Grey-100').attr('position')+1; j++) {
+                    setCaretPos(getCaretPos().prev());
+                }
             } else {
                 $(addStr).insertAfter(obj);
-                if (obj.next().hasClass('endspan')) {
-                    setCaretPos(obj.next().next());
-                } else {
+                //if (obj.next().hasClass('endspan')) {
+                //    setCaretPos(obj.next().next());
+                //} else {
                     setCaretPos(obj.next());
+                //}
+                for (var j = 1; j <= $('#tips').find('.bg-Grey-100').attr('position'); j++) {
+                    setCaretPos(getCaretPos().next());
                 }
             }
-            for (var j = 1; j <= $('#tips').find('.bg-Grey-100').attr('position'); j++) {
-                setCaretPos(getCaretPos().next());
+            obj=getCaretPos();
+            if (obj.hasClass('number')) {
+                    clickSpan();
+            } else if (obj.hasClass('unit')) {
+                clickSpan();
+            } else if (obj.hasClass('position')) {
+                clickSpan();
             }
             $('#tipsMenu')[0].hidden = true;
             autoBreakLine();
@@ -1662,7 +1701,7 @@ function numSelecterChange() {
     $('#dk').children().eq($('#numSelecter').attr('card')).children().eq($('#numSelecter').attr('code')).children().eq($('#numSelecter').attr('span')).text($('#numSelecter').val());
 }
 function positionSelecterChangeX() {
-    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text($('#positonMenuX').attr('max') - $('#positonMenuX').val());
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text(Math.abs($('#positonMenuX').attr('max')/2 - $('#positonMenuX').val()));
     var dir1;
     var dir2;
     if ($('#positonMenuX').val() > $('#positonMenuX').attr('max') / 2) {
@@ -1685,7 +1724,7 @@ function positionSelecterChangeX() {
     $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().next().text('cm');
 }
 function positionSelecterChangeY() {
-    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text($('#positonMenuX').attr('max') - $('#positonMenuY').val());
+    $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().text(Math.abs($('#positonMenuX').attr('max')/2 - $('#positonMenuY').val()));
     var dir1;
     var dir2;
     if ($('#positonMenuX').val() > $('#positonMenuX').attr('max') / 2) {
@@ -1706,3 +1745,5 @@ function positionSelecterChangeY() {
 
     $('#dk').children().eq($('#positonMenu').attr('card')).children().eq($('#positonMenu').attr('code')).children().eq($('#positonMenu').attr('span')).next().next().next().text('cm');
 }
+
+

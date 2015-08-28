@@ -24,28 +24,30 @@
 #baidu{
 	opacity:0.9;
 }
-#my-menu-left{
-	width:30%;
-	height: 100%;
-	top: 0%;
-	left:0%;
-	float: left;
-}
-#my-menu-right{
-	width:70%;
-	height: 100%;
-	top: 0%;
-	float: left;
-}
+/*#my-menu-left{*/
+	/*width:30%;*/
+	/*height: 100%;*/
+	/*top: 0%;*/
+	/*left:0%;*/
+	/*float: left;*/
+/*}*/
+/*#my-menu-right{*/
+	/*width:70%;*/
+	/*height: 100%;*/
+	/*top: 0%;*/
+	/*float: left;*/
+/*}*/
 #my-menu{
 	height: 75%;
 	overflow: hidden;
 }
-.my-menu-section{
-	float: top;
-	height: 20%;
+/*.my-menu-section{*/
+	/*float: top;*/
+	/*height: 20%;*/
+/*}*/
+#tb{
+	
 }
-
 #dk{
     height: 88%;
 	overflow-y:scroll;
@@ -56,32 +58,24 @@
 	right: 21%;
 	z-index: 4;
 }
-
-
-#gr{
-	width:96%;
-	margin-left:auto; margin-right:auto;
-	margin-bottom: 50px;
-	white-space:normal;
+#save0{
+	bottom: 1pc;
+	position: absolute;
+	right: 25%;
+	z-index: 4;
 }
-#br{
+
+/*#gr{*/
+	/*width:96%;*/
+	/*margin-left:auto; margin-right:auto;*/
+	/*margin-bottom: 50px;*/
+	/*white-space:normal;*/
+/*}*/
+#dk .card{
 	margin-bottom: 50px;width:96%;
 	margin-left:auto; margin-right:auto;
 }
 
-#jt{
-margin-bottom: 50px;width:96%;
-	margin-left:auto; margin-right:auto;
-}
-#jw{
-margin-bottom: 50px;width:96%;
-	margin-left:auto; margin-right:auto;
-}
-
-#tg{
-margin-bottom: 50px;width:96%;
-	margin-left:auto; margin-right:auto;
-}
 
 #writing{
 	bottom: 0pc;
@@ -378,8 +372,8 @@ code {
 	height: 100%;
 	width: 12%;
 	border-radius: 0.75em / 2em;
-	-webkit-transition: width 0.2s, height 0.2s, border-radius 0.2s, left 0.2s, top 0.2s, opacity 0.1s;
-	transition: width 0.2s, height 0.2s, border-radius 0.2s, left 0.2s, top 0.2s, opacity 0.1s;
+	-webkit-transition: width 0.05s, height 0.05s, border-radius 0.05s, left 0.05s, top 0.05s, opacity 0.025s;
+	transition: width 0.05s, height 0.05s, border-radius 0.05s, left 0.05s, top 0.05s, opacity 0.025s;
 	text-align: center;
 	pointer-events: none;
 	opacity: 0;

@@ -1480,6 +1480,8 @@ function addspan() {
                             //$(word_list[i]).attr('weight',item.factor);
                         });
                         $("#searchWord").jQCloud(word_list);
+                        $('#search')[0].hidden = false;
+                        $('#search').insertBefore($('#search').siblings('.card').eq(0));
                     }
                 );
                 return;
@@ -1555,6 +1557,9 @@ function addspan() {
                         //$(word_list[i]).attr('weight',item.factor);
                     });
                     $("#my_words").jQCloud(word_list);
+                    $('#diseaseCard')[0].hidden = false;
+                    $('#diseaseCard').insertBefore($('#diseaseCard').siblings('.card').eq(0));
+
                     word_list = [];
                     $.each(danger, function (i, item) {
                         word_list[i] = {};
@@ -1564,6 +1569,8 @@ function addspan() {
                         //$(word_list[i]).attr('weight',item.factor);
                     });
                     $("#dangerWord").jQCloud(word_list);
+                    $('#dangerCard')[0].hidden = false;
+                    $('#dangerCard').insertBefore($('#dangerCard').siblings('.card').eq(1));
 
                 }
             );

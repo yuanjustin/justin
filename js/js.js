@@ -22,6 +22,14 @@
 //document.onselectionchange= (selectChange());
 function onload() {
     var md = new Material();
+    var word_list = [
+        {text: "ifxoxo.com", weight: 13},
+        {text: "520xmn.com", weight: 10.5},
+        {text: "jquery", weight: 9.4},
+        {text: "jqcloud", weight: 8},
+        {text: "ifxoxo1", weight: 6.2}
+    ];
+    $("#my_words").jQCloud(word_list);
 
     document.getElementById("leftMenu").addEventListener("transitionend", function () {
         autoBreakLine();

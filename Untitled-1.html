@@ -2,11 +2,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
     <title>电子病历</title>
+    <script language="javascript" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <link rel="stylesheet" href="css/material.css"/>
     <script src="js/material.js"></script>
-    <script language="javascript" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script src="js/js.js"></script>
-
+    <script type="text/javascript" src="js/jqcloud-1.0.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jqcloud.css"/>
 </head>
 <!--//<script type="text/javascript" src="js/py.js"></script>-->
 
@@ -20,8 +21,20 @@
     <p></p>
     <p></p>
     <p></p>
-    <div class="card rich-card inforcards" id="helpCard" >
-        <div class="card-hero" style="background-image: url('demo-files/card-hero.jpg')">
+
+    <div class="card rich-card inforcards" id="diseaseCard">
+        <div class="card-hero">
+            <div id="my_words" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-footer">
+            <button class="button flat" onclick="$('#diseaseCard').remove();">删除</button>
+            <button class="button flat color-orange-500">详细</button>
+        </div>
+    </div>
+
+    <div class="card rich-card inforcards" id="helpCard">
+        <div class="card-hero" style="background-image: url('img/welcome.png')">
             <h1>欢迎使用<br>帮助请按下按钮</h1>
         </div>
         <div class="divider"></div>
@@ -30,7 +43,29 @@
             <button class="button flat color-orange-500">详细帮助</button>
         </div>
     </div>
+
+    <div class="card rich-card inforcards" id="dangerCard">
+        <div class="card-hero" style="background-image: url('img/warning.png')">
+            <h1>注意以下疾病<br>啦啦啦</h1>
+        </div>
+        <div class="divider"></div>
+        <div class="card-footer">
+            <button class="button flat" onclick="$(this).parents('.card').remove();">删除</button>
+            <button class="button flat color-orange-500">详细</button>
+        </div>
+    </div>
+    <div class="card rich-card inforcards" id="search">
+        <div class="card-hero" style="background-image: url('img/document.png')">
+            <h1>检索结果<br>帮助请按下按钮</h1>
+        </div>
+        <div class="divider"></div>
+        <div class="card-footer">
+            <button class="button flat" onclick="$(this).parents('.card').remove();">删除</button>
+            <button class="button flat color-orange-500">详细</button>
+        </div>
+    </div>
 </div>
+
 
 <div class="dialog" id="login" hidden>
 

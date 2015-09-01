@@ -40,7 +40,9 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">É¾³ý</button>
-            <button class="button flat color-orange-500" onclick="  Dialog.show($('#factor')[0]);">ÏêÏ¸</button>
+            <button class="button flat color-orange-500"
+                    onclick='  Dialog.show($("#factor")[0]);window.frames["factor"].contentWindow.work();'>ÏêÏ¸
+            </button>
         </div>
     </div>
 
@@ -51,7 +53,9 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">É¾³ý</button>
-            <button class="button flat color-orange-500" onclick="  Dialog.show($('#danger')[0]);">ÏêÏ¸</button>
+            <button class="button flat color-orange-500"
+                    onclick="  Dialog.show($('#danger')[0]);$('#danger')[0].contentWindow.work();">ÏêÏ¸
+            </button>
         </div>
     </div>
 

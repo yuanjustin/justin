@@ -3,11 +3,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
     <title>电子病历</title>
     <script language="javascript" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
-    <link rel="stylesheet" href="css/material.css"/>
-    <script src="js/material.js"></script>
     <script src="js/js.js"></script>
     <script type="text/javascript" src="js/jqcloud-1.0.4.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/jqcloud.css"/>
+    <link rel="stylesheet" href="css/material.css"/>
+    <script src="js/material.js"></script>
 </head>
 <!--//<script type="text/javascript" src="js/py.js"></script>-->
 
@@ -29,7 +29,7 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">删除</button>
-            <button class="button flat color-orange-500">详细帮助</button>
+            <button class="button flat color-orange-500" onclick="  Dialog.show($('#help')[0]);">详细帮助</button>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">删除</button>
-            <button class="button flat color-orange-500">详细</button>
+            <button class="button flat color-orange-500" onclick="  Dialog.show($('#factor')[0]);">详细</button>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">删除</button>
-            <button class="button flat color-orange-500">详细</button>
+            <button class="button flat color-orange-500" onclick="  Dialog.show($('#danger')[0]);">详细</button>
         </div>
     </div>
 
@@ -62,48 +62,40 @@
         <div class="divider"></div>
         <div class="card-footer">
             <button class="button flat" onclick="$(this).parents('.card')[0].hidden=true;">删除</button>
-            <button class="button flat color-orange-500">详细检索结果</button>
+            <button class="button flat color-orange-500" onclick="  Dialog.show($('#searchResult')[0]);">详细检索结果</button>
         </div>
     </div>
 </div>
+<iframe width="800" height="600" src="menu/factor.html" class="dialog" id="factor" hidden></iframe>
+<iframe width="800" height="600" src="menu/danger.html" class="dialog" id="danger" hidden></iframe>
+<iframe width="800" height="600" src="menu/search.html" class="dialog" id="searchResult" hidden></iframe>
+<iframe width="800" height="600" src="menu/help.html" class="dialog" id="help" hidden></iframe>
 
 
-<div class="dialog" id="login" hidden>
-
-
-    <div class="text-input-container">
-        <i class=" icon-account-circle text-input-icon"></i>
-        <input type="text" class="text-input border-green-500" placeholder="用户名"/>
-
-        <p>
-        </p>
-
-        <p>
-        </p></div>
-    <div class="text-input-container">
-        <i class="  icon-lock-outline text-input-icon"></i>
-        <input type="text" class="text-input border-green-500" placeholder="密码"/>
-
-        <p>
-        </p>
-
-        <p>
-        </p>
-    </div>
-    <p>
-    </p>
-
-    <p>
-    </p>
-
-    <div class="dialog-footer">
-        <button class="button">管理员</button>
-		<span class="float-right">
-			<button class="button dialog-close">注册</button>
-			<button class="button color-blue-500 dialog-confirm">登录</button>
-		</span>
-    </div>
+<div id="menuDialog">
+    <div></div>
+    <iframe width="800" height="600" src="menu/model.html" class="dialog" id="model" hidden></iframe>
+    <iframe width="800" height="600" src="menu/reorganization.html" class="dialog" id="reorganization" hidden></iframe>
+    <iframe width="800" height="600" src="menu/searchPage.html" class="dialog" id="searchPage" hidden></iframe>
+    <iframe width="800" height="600" src="menu/addPage.html" class="dialog" id="addPage" hidden></iframe>
+    <div></div>
+    <div></div>
+    <iframe width="800" height="600" src="menu/importPatient.html" class="dialog" id="importPatient" hidden></iframe>
+    <iframe width="450" height="450" src="menu/editPatient.html" class="dialog" id="editPatient" hidden></iframe>
+    <iframe width="800" height="600" src="menu/searchPatient.html" class="dialog" id="searchPatient" hidden></iframe>
+    <div></div>
+    <div></div>
+    <iframe width="800" height="600" src="menu/setting.html" class="dialog" id="setting" hidden></iframe>
+    <iframe frameborder=0 src="menu/login.html" class="dialog" id="login" hidden></iframe>
+    <div></div>
+    <div></div>
+    <iframe width="800" height="600" src="menu/addTerm.html" class="dialog" id="addTerm" hidden></iframe>
+    <iframe width="800" height="600" src="menu/addTips.html" class="dialog" id="addTips" hidden></iframe>
+    <iframe width="800" height="600" src="menu/editTips.html" class="dialog" id="editTips" hidden></iframe>
+    <div></div>
 </div>
+
+
 
 
 <div id="leftMenu" class="sidemenu sidebar responsive" z=999 hidden>
@@ -118,10 +110,10 @@
             <table>
                 <tr>
                     <td>
-                        <div class="switch">
-                        <input type="checkbox" id="switch"/>
+                        <div class="switch ">
+                            <input class='' type="checkbox" id="switch"/>
                         <label  for="switch"></label>
-                        <label  class="form-control-label" style="font-size: 20px;">固定</label>
+                            <label class=" form-control-label" style="font-size: 20px;">固定</label>
 </div>
                     </td>
                     <td>
@@ -151,23 +143,27 @@
 
     </div>
     <div class="menu" id="my-menu" style="overflow-y: scroll">
-        <li ripple="" class="selected color-blue-500"><a href="#introduction"><i class="icon-info-outline"></i>Introduction</a>
-        </li>
+        <h2>病历管理</h2>
+        <li ripple=""><a><i class=" icon-file-download"></i>导入模版</a></li>
+        <li ripple=""><a><i class=" icon-content-copy"></i>病历重排</a></li>
+        <li ripple=""><a><i class="icon-pageview"></i>查找病历</a></li>
+        <li ripple=""><a><i class=" icon-add-circle"></i>新建其他病案</a></li>
         <li class="divider"></li>
-        <h2>Components</h2>
-        <li ripple=""><a href="#colors"><i class="icon-palette"></i>Colors</a></li>
-        <li ripple=""><a href="#ripple"><i class="icon-blur-on"></i>Ripple</a></li>
-        <li ripple=""><a href="#typography"><i class="icon-subject"></i>Typography</a></li>
+        <h2>病人管理</h2>
+        <li ripple=""><a><i class=" icon-person-add"></i>导入病人</a></li>
+        <li ripple=""><a><i class="icon-accessibility "></i>病人安排</a></li>
+        <li ripple=""><a><i class=" icon-search"></i>病人查询</a></li>
         <li class="divider"></li>
-        <li ripple=""><a href="#toggles"><i class="icon-check-circle-outline"></i>Toggles</a></li>
-        <li ripple=""><a href="#buttons"><i class="icon-pageview"></i>Buttons</a></li>
-        <li ripple=""><a href="#inputs"><i class="icon-input"></i>Inputs</a></li>
-        <li ripple=""><a href="#icons"><i class="icon-bookmark-outline"></i>Icons</a></li>
-        <li ripple=""><a href="#toolbars"><i class="icon-drive-site"></i>Toolbars</a></li>
-        <li ripple=""><a href="#popups"><i class="icon-notifications-none"></i>Popups</a></li>
-        <li ripple=""><a href="#lists-and-grids"><i class="icon-list"></i>Lists</a></li>
-        <li ripple=""><a href="#menus"><i class="icon-menu"></i>Menus</a></li>
-        <li ripple=""><a href="#cards"><i class="icon-content-copy"></i>Cards</a></li>
+        <h2>系统设置</h2>
+        <li ripple=""><a><i class="icon-settings"></i>病历设置</a></li>
+        <li ripple=""><a><i class=" icon-account-circle"></i>切换用户</a></li>
+        <li class="divider"></li>
+        <h2>自动完成管理</h2>
+        <li ripple=""><a><i class="icon-add"></i>新建专有名词</a></li>
+        <li ripple=""><a><i class="icon-circles-extended"></i>新建自动完成</a></li>
+        <li ripple=""><a><i class=" icon-mode-edit"></i>编辑自动完成</a></li>
+        <li class="divider"></li>
+        <li ripple=""><a><i class=" icon-exit-to-app"></i>退出</a></li>
     </div>
     <!--<div id="my-menu">-->
         <!--<div id="my-menu-left">-->

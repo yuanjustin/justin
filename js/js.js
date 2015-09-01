@@ -22,7 +22,6 @@
 //document.onselectionchange= (selectChange());
 function onload() {
     var md = new Material();
-
     document.getElementById("leftMenu").addEventListener("transitionend", function () {
         autoBreakLine();
     });
@@ -30,14 +29,33 @@ function onload() {
         autoBreakLine();
     });
     window.mySpan = {};
+    $('#my-menu').click(
+        function (e) {
+            //alert($(e.target).parents('li').index());
+            if ($('#menuDialog').children().eq($(e.target).parents('li').index()).hasClass('dialog')) {
+                Dialog.show($('#menuDialog').children().eq($(e.target).parents('li').index())[0]);
 
-    //Dialog.show(document.querySelector('#login'))
+            } else if ($(e.target).parents('li').index() == 20) {
+                window.close();
+            }
+        }
+    );
+    //Dialog.show(document.querySelector('#importPatient'));
+    //document.getElementById("tt").addEventListener("webkitTransitionEnd", function () {
+    //    $('#tt').append('<iframe src="demo-files/warning.png" > </iframe>');
+    //});
+    //Dialog.show(document.querySelector('#login'));
+    $('.dialog-overlay').click(function () {
+        if (document.querySelector('#login').hidden == true) {
+            hideMenu();
+        }
+    });
     window.unit = new Array();
     window.termAjax = new Array();
     window.baiduAjax = new Array();
     window.disease = new Array();
     window.danger = new Array();
-
+    window.searchResult = new Array();
     SideMenu.hide(document.querySelector('#leftMenu'));
     $('#dk').html($('#dk0').html());
     $('#tb').html($('#tb0').html());
@@ -192,7 +210,14 @@ function onload() {
 
         }
     });
-    window.onresize = autoBreakLine;
+    $('#dk').css('height', $(window).height() - $('#tb1').height());
+
+    $(window).resize(function () {
+        //$('#dk').css('height', $(window).height() - $('#tb1').height());
+        autoBreakLine;
+        //alert($(window).height()-$("#tb1").height());
+    });
+
 }
 //********************************************************************************
 
@@ -232,6 +257,9 @@ function noTypeKeyPress(event) {
         }
         return false;//²»ÒªÆÁ±Î°´¼ü
     } else if (event >= 48 && event <= 57) {
+        if ($('#searcher').is(":focus")) {//todo
+            return true;
+        }
         if (getState() != 'numberInput') {
             $('#inputmenu')[0].hidden = true;
             $('#unitSelectMenu')[0].hidden = true;
@@ -1479,6 +1507,7 @@ function addspan() {
                             //$(word_list[i]).attr('text',item.disease);
                             //$(word_list[i]).attr('weight',item.factor);
                         });
+                        $("#searchWord").html('');
                         $("#searchWord").jQCloud(word_list);
                         $('#search')[0].hidden = false;
                         $('#search').insertBefore($('#search').siblings('.card').eq(0));
@@ -1556,6 +1585,7 @@ function addspan() {
                         //$(word_list[i]).attr('text',item.disease);
                         //$(word_list[i]).attr('weight',item.factor);
                     });
+                    $("#my_words").html('');
                     $("#my_words").jQCloud(word_list);
                     $('#diseaseCard')[0].hidden = false;
                     $('#diseaseCard').insertBefore($('#diseaseCard').siblings('.card').eq(0));
@@ -1568,6 +1598,7 @@ function addspan() {
                         //$(word_list[i]).attr('text',item.disease);
                         //$(word_list[i]).attr('weight',item.factor);
                     });
+                    $("#dangerWord").html('');
                     $("#dangerWord").jQCloud(word_list);
                     $('#dangerCard')[0].hidden = false;
                     $('#dangerCard').insertBefore($('#dangerCard').siblings('.card').eq(1));
@@ -1849,3 +1880,8 @@ function positionSelecterChangeY() {
 }
 
 
+function hideMenu() {
+    $('iframe').each(function () {
+        Dialog.hide(this);
+    })
+}

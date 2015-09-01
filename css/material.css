@@ -581,7 +581,7 @@ code {
 	vertical-align: top;
 }
 .switch input:checked + label::before {
-	background-color: #b9e3cf;
+	background-color: #90caf9;
 }
 /* Switch thumb */
 .switch input + label::after {
@@ -601,7 +601,7 @@ code {
 	vertical-align: top;
 }
 .switch input:checked + label::after {
-	background-color: #0f9d58 !important;
+	background-color: #2196f3 !important;
 	border: none;
 	-webkit-transform: translateX(1.3125em);
 	transform: translateX(1.3125em);

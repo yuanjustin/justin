@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../css/material.css"/>
+    <script language="javascript" type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+
+</head>
+<body>
+
+<select id='menu' class="dropdown-menu">
+    <option>按疾病重排</option>
+    <option>按时间重排</option>
+    <option>按打印格式重排</option>
+</select>
+
+<button class="button raised bg-blue-500 color-white" onclick="work();">重排</button>
+
+<div id="main">
+
+</div>
+
+
+<div id="disease" hidden>
+    <input type="text" class="text-input" placeholder="请输入疾病名称"/>
+
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+                    <ul class="list">
+                        <li ripple>
+                            <h2>
+                                支持</h2>
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <ul class="list">
+                        <li ripple>
+                            <h2>
+                                不支持</h2>
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+                        <li ripple>
+                            dfsdf
+                        </li>
+
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="time" hidden>
+    34
+</div>
+<div id="print" hidden>
+    45
+</div>
+<script>
+    function work() {
+        if ($('#menu').val() == '按疾病重排') {
+            $('#main').html($('#disease').html());
+        } else if ($('#menu').val() == '按时间重排') {
+            $('#main').html($('#time').html());
+        } else {
+            $('#main').html($('#print').html());
+        }
+    }
+</script>
+</body>
+
+</html>
